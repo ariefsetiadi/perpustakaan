@@ -56,7 +56,7 @@
                     <div id="collapseTwo" class="collapse {{ (request()->segment(1) == 'data') ? 'show' : '' }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <a class="collapse-item {{ (request()->segment(2) == 'petugas') ? 'active' : '' }}" href="{{ route('petugas.index') }}">Petugas</a>
-                            <a class="collapse-item" href="">Member</a>
+                            <a class="collapse-item {{ (request()->segment(2) == 'member') ? 'active' : '' }}" href="{{ route('member.index') }}">Member</a>
                             <a class="collapse-item" href="">Denda</a>
                             <a class="collapse-item" href="">Kategori</a>
                             <a class="collapse-item" href="">Sub Kategori</a>
@@ -207,7 +207,7 @@
                             <li class="nav-item dropdown no-arrow">
                                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <img class="mr-2 img-profile rounded-circle" src="{{ asset('assets/img/undraw_profile.svg') }}">
+                                    <img class="mr-2 img-profile rounded-circle" src="{{ Auth::user()->image ? asset('uploads/users/' . Auth::user()->image) : asset('assets/img/undraw_profile.svg') }}">
                                     <span class="d-none d-lg-inline text-gray-600 small">{{ Auth::user()->fullname }}</span>
                                 </a>
                                 <!-- Dropdown - User Information -->
@@ -220,10 +220,6 @@
                                     <a class="dropdown-item" href="{{ route('change.password') }}">
                                         <i class="fas fa-unlock fa-sm fa-fw mr-2 text-gray-400"></i>
                                         Ubah Password
-                                    </a>
-                                    <a class="dropdown-item" href="#">
-                                        <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Activity Log
                                     </a>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="{{ route('logout') }}">

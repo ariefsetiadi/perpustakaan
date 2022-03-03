@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Auth\{LoginController, HomeController};
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Data\MemberController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,6 +52,21 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/restore/{id}', [AdminController::class, 'restore'])->name('petugas.restore');
                 Route::get('/reset/{id}', [AdminController::class, 'reset'])->name('petugas.reset');
             });
+        });
+    });
+
+    Route::prefix('data')->group(function () {
+        Route::prefix('member')->group(function () {
+            Route::get('/', [MemberController::class, 'index'])->name('member.index');
+            Route::get('/create', [MemberController::class, 'create'])->name('member.create');
+            Route::post('/store', [MemberController::class, 'store'])->name('member.store');
+            Route::get('/detail/{id}', [MemberController::class, 'show'])->name('member.show');
+            Route::get('/edit/{id}', [MemberController::class, 'edit'])->name('member.edit');
+            Route::post('/update', [MemberController::class, 'update'])->name('member.update');
+            Route::get('/delete/{id}', [MemberController::class, 'destroy'])->name('member.delete');
+            Route::get('/trash', [MemberController::class, 'trash'])->name('member.trash');
+            Route::get('/restore/{id}', [MemberController::class, 'restore'])->name('member.restore');
+            Route::get('/print/{id}', [MemberController::class, 'print'])->name('member.print');
         });
     });
 });
