@@ -26,8 +26,16 @@ Route::middleware(['guest'])->group(function () {
 });
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
     Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+    // Profil
+    Route::get('/profil', [LoginController::class, 'profil'])->name('profil');
+    Route::post('/profil', [LoginController::class, 'updateProfil'])->name('updateProfil');
+
+    // Password
+    Route::get('/password', [LoginController::class, 'password'])->name('change.password');
+    Route::post('/password', [LoginController::class, 'updatePassword'])->name('updatePassword');
+    Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
     Route::middleware(['isAdmin'])->group(function () {
         Route::prefix('data')->group(function () {
@@ -41,6 +49,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/delete/{id}', [AdminController::class, 'destroy'])->name('petugas.delete');
                 Route::get('/trash', [AdminController::class, 'trash'])->name('petugas.trash');
                 Route::get('/restore/{id}', [AdminController::class, 'restore'])->name('petugas.restore');
+                Route::get('/reset/{id}', [AdminController::class, 'reset'])->name('petugas.reset');
             });
         });
     });

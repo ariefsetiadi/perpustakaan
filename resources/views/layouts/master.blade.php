@@ -57,6 +57,7 @@
                         <div class="bg-white py-2 collapse-inner rounded">
                             <a class="collapse-item {{ (request()->segment(2) == 'petugas') ? 'active' : '' }}" href="{{ route('petugas.index') }}">Petugas</a>
                             <a class="collapse-item" href="">Member</a>
+                            <a class="collapse-item" href="">Denda</a>
                             <a class="collapse-item" href="">Kategori</a>
                             <a class="collapse-item" href="">Sub Kategori</a>
                             <a class="collapse-item" href="">Koleksi</a>
@@ -212,13 +213,13 @@
                                 <!-- Dropdown - User Information -->
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                     aria-labelledby="userDropdown">
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item" href="{{ route('profil') }}">
                                         <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Profile
+                                        Profil Saya
                                     </a>
-                                    <a class="dropdown-item" href="#">
-                                        <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Settings
+                                    <a class="dropdown-item" href="{{ route('change.password') }}">
+                                        <i class="fas fa-unlock fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Ubah Password
                                     </a>
                                     <a class="dropdown-item" href="#">
                                         <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>

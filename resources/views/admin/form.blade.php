@@ -125,169 +125,169 @@
                 var fileName = $(this).val();
                 $(this).next('.custom-file-label').html(fileName);
             });
-        });
 
-        // Ajax Submit Officer
-        $('#officerForm').on('submit', function (e) {
-            e.preventDefault();
+            // Ajax Submit Officer
+            $('#officerForm').on('submit', function (e) {
+                e.preventDefault();
 
-            // Ajax Save Officer
-            if($('#btnSave').text() == 'Simpan') {
-                $('#officer_id_error').html();
-                $('#fullname_error').html();
-                $('#place_of_birth_error').html();
-                $('#date_of_birth_error').html();
-                $('#gender_error').html();
-                $('#phone_error').html();
-                $('#address_error').html();
-                $('#image_error').html();
+                // Ajax Save Officer
+                if($('#btnSave').text() == 'Simpan') {
+                    $('#officer_id_error').html();
+                    $('#fullname_error').html();
+                    $('#place_of_birth_error').html();
+                    $('#date_of_birth_error').html();
+                    $('#gender_error').html();
+                    $('#phone_error').html();
+                    $('#address_error').html();
+                    $('#image_error').html();
 
-                $.ajax({
-                    url: "{{ route('petugas.store') }}",
-                    method: 'POST',
-                    data: new FormData(this),
-                    contentType: false,
-                    cache: false,
-                    processData: false,
-                    dataType:"json",
+                    $.ajax({
+                        url: "{{ route('petugas.store') }}",
+                        method: 'POST',
+                        data: new FormData(this),
+                        contentType: false,
+                        cache: false,
+                        processData: false,
+                        dataType:"json",
 
-                    success: function(data) {
-                        if(data.errors) {
-                            if(data.errors.officer_id) {
-                                $("#officer_id_error").html(data.errors.officer_id[0]);
-                                $("#officer_id").addClass("is-invalid");
+                        success: function(data) {
+                            if(data.errors) {
+                                if(data.errors.officer_id) {
+                                    $("#officer_id_error").html(data.errors.officer_id[0]);
+                                    $("#officer_id").addClass("is-invalid");
+                                }
+
+                                if(data.errors.fullname) {
+                                    $("#fullname_error").html(data.errors.fullname[0]);
+                                    $("#fullname").addClass("is-invalid");
+                                }
+
+                                if(data.errors.place_of_birth) {
+                                    $("#place_of_birth_error").html(data.errors.place_of_birth[0]);
+                                    $("#place_of_birth").addClass("is-invalid");
+                                }
+
+                                if(data.errors.date_of_birth) {
+                                    $("#date_of_birth_error").html(data.errors.date_of_birth[0]);
+                                    $("#date_of_birth").addClass("is-invalid");
+                                }
+
+                                if(data.errors.gender) {
+                                    $("#gender_error").html(data.errors.gender[0]);
+                                    $("#gender").addClass("is-invalid");
+                                }
+
+                                if(data.errors.phone) {
+                                    $("#phone_error").html(data.errors.phone[0]);
+                                    $("#phone").addClass("is-invalid");
+                                }
+
+                                if(data.errors.address) {
+                                    $("#address_error").html(data.errors.address[0]);
+                                    $("#address").addClass("is-invalid");
+                                }
+
+                                if(data.errors.image) {
+                                    $("#image_error").html(data.errors.image[0]);
+                                    $("#image").addClass("is-invalid");
+                                }
                             }
 
-                            if(data.errors.fullname) {
-                                $("#fullname_error").html(data.errors.fullname[0]);
-                                $("#fullname").addClass("is-invalid");
-                            }
+                            if(data.success) {
+                                $('#officerForm')[0].reset();
 
-                            if(data.errors.place_of_birth) {
-                                $("#place_of_birth_error").html(data.errors.place_of_birth[0]);
-                                $("#place_of_birth").addClass("is-invalid");
-                            }
-
-                            if(data.errors.date_of_birth) {
-                                $("#date_of_birth_error").html(data.errors.date_of_birth[0]);
-                                $("#date_of_birth").addClass("is-invalid");
-                            }
-
-                            if(data.errors.gender) {
-                                $("#gender_error").html(data.errors.gender[0]);
-                                $("#gender").addClass("is-invalid");
-                            }
-
-                            if(data.errors.phone) {
-                                $("#phone_error").html(data.errors.phone[0]);
-                                $("#phone").addClass("is-invalid");
-                            }
-
-                            if(data.errors.address) {
-                                $("#address_error").html(data.errors.address[0]);
-                                $("#address").addClass("is-invalid");
-                            }
-
-                            if(data.errors.image) {
-                                $("#image_error").html(data.errors.image[0]);
-                                $("#image").addClass("is-invalid");
-                            }
-                        }
-
-                        if(data.success) {
-                            $('#officerForm')[0].reset();
-
-                            Swal.fire({
-                                title: 'Sukses',
-                                text: 'Petugas Berhasil Disimpan',
-                                icon: 'success',
-                                timer: 2000
-                            }).then(function() {
-                                window.location.href = "{{ route('petugas.index') }}";
-                            });
-                        }
-                    }
-                });
-            }
-
-            // Ajax Update Officer
-            if($('#btnSave').text() == 'Update') {
-                $('#officer_id_error').html();
-                $('#fullname_error').html();
-                $('#place_of_birth_error').html();
-                $('#date_of_birth_error').html();
-                $('#gender_error').html();
-                $('#phone_error').html();
-                $('#address_error').html();
-                $('#image_error').html();
-
-                $.ajax({
-                    url: "{{ route('petugas.update') }}",
-                    method: 'POST',
-                    data: new FormData(this),
-                    contentType: false,
-                    cache: false,
-                    processData: false,
-                    dataType:"json",
-
-                    success: function(data) {
-                        if(data.errors) {
-                            if(data.errors.officer_id) {
-                                $("#officer_id_error").html(data.errors.officer_id[0]);
-                                $("#officer_id").addClass("is-invalid");
-                            }
-
-                            if(data.errors.fullname) {
-                                $("#fullname_error").html(data.errors.fullname[0]);
-                                $("#fullname").addClass("is-invalid");
-                            }
-
-                            if(data.errors.place_of_birth) {
-                                $("#place_of_birth_error").html(data.errors.place_of_birth[0]);
-                                $("#place_of_birth").addClass("is-invalid");
-                            }
-
-                            if(data.errors.date_of_birth) {
-                                $("#date_of_birth_error").html(data.errors.date_of_birth[0]);
-                                $("#date_of_birth").addClass("is-invalid");
-                            }
-
-                            if(data.errors.gender) {
-                                $("#gender_error").html(data.errors.gender[0]);
-                                $("#gender").addClass("is-invalid");
-                            }
-
-                            if(data.errors.phone) {
-                                $("#phone_error").html(data.errors.phone[0]);
-                                $("#phone").addClass("is-invalid");
-                            }
-
-                            if(data.errors.address) {
-                                $("#address_error").html(data.errors.address[0]);
-                                $("#address").addClass("is-invalid");
-                            }
-
-                            if(data.errors.image) {
-                                $("#image_error").html(data.errors.image[0]);
-                                $("#image").addClass("is-invalid");
+                                Swal.fire({
+                                    title: 'Sukses',
+                                    text: 'Petugas Berhasil Disimpan',
+                                    icon: 'success',
+                                    timer: 2000
+                                }).then(function() {
+                                    window.location.href = "{{ route('petugas.index') }}";
+                                });
                             }
                         }
+                    });
+                }
 
-                        if(data.success) {
-                            $('#officerForm')[0].reset();
+                // Ajax Update Officer
+                if($('#btnSave').text() == 'Update') {
+                    $('#officer_id_error').html();
+                    $('#fullname_error').html();
+                    $('#place_of_birth_error').html();
+                    $('#date_of_birth_error').html();
+                    $('#gender_error').html();
+                    $('#phone_error').html();
+                    $('#address_error').html();
+                    $('#image_error').html();
 
-                            Swal.fire({
-                                title: 'Sukses',
-                                text: 'Petugas Berhasil Diupdate',
-                                icon: 'success',
-                                timer: 2000
-                            }).then(function() {
-                                window.location.href = "{{ route('petugas.index') }}";
-                            });
+                    $.ajax({
+                        url: "{{ route('petugas.update') }}",
+                        method: 'POST',
+                        data: new FormData(this),
+                        contentType: false,
+                        cache: false,
+                        processData: false,
+                        dataType:"json",
+
+                        success: function(data) {
+                            if(data.errors) {
+                                if(data.errors.officer_id) {
+                                    $("#officer_id_error").html(data.errors.officer_id[0]);
+                                    $("#officer_id").addClass("is-invalid");
+                                }
+
+                                if(data.errors.fullname) {
+                                    $("#fullname_error").html(data.errors.fullname[0]);
+                                    $("#fullname").addClass("is-invalid");
+                                }
+
+                                if(data.errors.place_of_birth) {
+                                    $("#place_of_birth_error").html(data.errors.place_of_birth[0]);
+                                    $("#place_of_birth").addClass("is-invalid");
+                                }
+
+                                if(data.errors.date_of_birth) {
+                                    $("#date_of_birth_error").html(data.errors.date_of_birth[0]);
+                                    $("#date_of_birth").addClass("is-invalid");
+                                }
+
+                                if(data.errors.gender) {
+                                    $("#gender_error").html(data.errors.gender[0]);
+                                    $("#gender").addClass("is-invalid");
+                                }
+
+                                if(data.errors.phone) {
+                                    $("#phone_error").html(data.errors.phone[0]);
+                                    $("#phone").addClass("is-invalid");
+                                }
+
+                                if(data.errors.address) {
+                                    $("#address_error").html(data.errors.address[0]);
+                                    $("#address").addClass("is-invalid");
+                                }
+
+                                if(data.errors.image) {
+                                    $("#image_error").html(data.errors.image[0]);
+                                    $("#image").addClass("is-invalid");
+                                }
+                            }
+
+                            if(data.success) {
+                                $('#officerForm')[0].reset();
+
+                                Swal.fire({
+                                    title: 'Sukses',
+                                    text: 'Petugas Berhasil Diupdate',
+                                    icon: 'success',
+                                    timer: 2000
+                                }).then(function() {
+                                    window.location.href = "{{ route('petugas.index') }}";
+                                });
+                            }
                         }
-                    }
-                });
-            }
+                    });
+                }
+            });
         });
     </script>
 @endpush

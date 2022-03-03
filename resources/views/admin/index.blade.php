@@ -54,6 +54,22 @@
                 </div>
             </div>
         </div>
+
+        <!-- Reset Password Confirmation -->
+        <div class="modal fade" data-backdrop="static" data-keyboard="false" id="resetModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="text-center my-3">
+                            <img src="{{ asset('assets/img/confirm-delete.svg') }}">
+                            <h5 class="my-3" style="color: #1f1f1f">Anda Yakin Ingin Reset Password Petugas Ini?</h5>
+                            <button type="button" class="btn btn-secondary mr-1" id="btnTdk" data-dismiss="modal"></button>
+                            <button type="submit" class="btn btn-success ml-1" id="btnIya"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <!-- /.container-fluid -->
 @endsection
@@ -145,6 +161,40 @@
                         Swal.fire({
                             title: 'Sukses',
                             text: 'Petugas Berhasil Dihapus',
+                            icon: 'success',
+                            timer: 2000
+                        });
+                    }
+                });
+            });
+
+            // Ajax Display Reset Password Modal
+            var url     =   '{{ route("petugas.reset", ":id") }}';
+
+            $(document).on('click', '.btnReset', function() {
+                officer_id  =   $(this).attr('id');
+                $('#btnTdk').text("Batal");
+                $('#btnIya').text("Ya, Reset");
+                $('#resetModal').modal("show");
+            });
+
+            // Ajax Reset Password
+            $('#btnIya').click(function() {
+                $.ajax({
+                    url: url.replace(":id", officer_id),
+                    beforeSend: function() {
+                        $('#btnIya').text('Mereset...');
+                    },
+
+                    success: function(data) {
+                        setTimeout(function() {
+                            $('#resetModal').modal('hide');
+                            $('#userTable').DataTable().ajax.reload();
+                        });
+
+                        Swal.fire({
+                            title: 'Sukses',
+                            text: 'Password Berhasil Direset',
                             icon: 'success',
                             timer: 2000
                         });

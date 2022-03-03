@@ -45,20 +45,26 @@
                                     <div class="form-group">
                                         <input type="text" class="form-control form-control-user @error('officer_id') is-invalid @enderror" name="officer_id" id="officer_id" placeholder="Nomor Petugas">
                                         @error('officer_id')
-                                            <div class="invalid-feedback" role="alert">
+                                            <span class="text-danger">
                                                 {{ $message }}
-                                            </div>
+                                            </span>
                                         @enderror
                                     </div>
 
                                     <div class="form-group">
                                         <input type="password" class="form-control form-control-user @error('password') is-invalid @enderror" name="password" id="password" placeholder="Password">
                                         @error('password')
-                                            <div class="invalid-feedback" role="alert">
+                                            <span class="text-danger">
                                                 {{ $message }}
-                                            </div>
+                                            </span>
                                         @enderror
+
+                                        <div class="custom-control custom-checkbox mt-1">
+                                            <input type="checkbox" class="custom-control-input" id="showPassword" onclick="showPass()">
+                                            <label class="custom-control-label" for="showPassword">Lihat Password</label>
+                                        </div>
                                     </div>
+
                                     <button type="submit" class="btn btn-success btn-user btn-block">LOGIN</button>
                                 </form>
                             </div>
@@ -75,5 +81,17 @@
         <script src="{{ asset('assets/vendor/jquery-easing/jquery.easing.min.js') }}"></script>
         <!-- Custom scripts for all pages-->
         <script src="{{ asset('assets/js/sb-admin-2.min.js') }}"></script>
+
+        <script type="text/javascript">
+            // Jquery show password
+            function showPass() {
+                var show        =   document.getElementById("password");
+                if (show.type   === "password") {
+                    show.type   =   "text";
+                } else {
+                    show.type   =   "password";
+                }
+            }
+        </script>
     </body>
 </html>

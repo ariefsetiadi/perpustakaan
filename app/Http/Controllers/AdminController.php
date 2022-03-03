@@ -21,7 +21,8 @@ class AdminController extends Controller
             return datatables()->of(User::where('isAdmin', false)->orderBy('created_at', 'desc')->get())
                 ->addColumn('action', function($data) {
                     if(Auth::user()->id != $data->id) {
-                        $button =   '<a href="' . route('petugas.show', $data->id) . '" class="btn btn-info" title="Detail"><i class="fas fa-eye"></i></a>';
+                        $button =  '<button type="button" id="'.$data->id.'" class="btnReset btn btn-success" title="Reset Password"><i class="fas fa-unlock"></i></button>';
+                        $button .=   '<a href="' . route('petugas.show', $data->id) . '" class="btn btn-info ml-2" title="Detail"><i class="fas fa-eye"></i></a>';
                         $button .=   '<a href="' . route('petugas.edit', $data->id) . '" class="btn btn-warning mx-2" title="Edit"><i class="fas fa-pencil-alt"></i></a>';
                         $button .=  '<button type="button" id="'.$data->id.'" class="btnDelete btn btn-danger" title="Hapus"><i class="fas fa-eraser"></i></button>';
 
@@ -223,5 +224,14 @@ class AdminController extends Controller
         $officer->restore();
 
         return response()->json(['success' => 'Petugas Berhasil Dipulihkan']);
+    }
+
+    public function reset($id)
+    {
+        $officer            =   User::findOrFail($id);
+        $officer->password  =   Hash::make($officer->officer_id);
+        $officer->save();
+
+        return response()->json(['success' => 'Password Berhasil Direset']);
     }
 }
