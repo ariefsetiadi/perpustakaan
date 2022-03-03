@@ -47,16 +47,19 @@
                 <hr class="sidebar-divider my-0">
 
                 <!-- Nav Item - Pages Collapse Menu -->
-                <li class="nav-item">
-                    <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseTwo"
+                <li class="nav-item {{ (request()->segment(1) == 'data') ? 'active' : '' }}">
+                    <a class="nav-link {{ (request()->segment(1) == 'data') ? '' : 'collapsed' }}" href="#" data-toggle="collapse" data-target="#collapseTwo"
                         aria-expanded="true" aria-controls="collapseTwo">
                         <i class="fas fa-fw fa-sitemap"></i>
                         <span>Data</span>
                     </a>
-                    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div id="collapseTwo" class="collapse {{ (request()->segment(1) == 'data') ? 'show' : '' }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
+                            <a class="collapse-item {{ (request()->segment(2) == 'petugas') ? 'active' : '' }}" href="{{ route('petugas.index') }}">Petugas</a>
+                            <a class="collapse-item" href="">Member</a>
                             <a class="collapse-item" href="">Kategori</a>
-                            <a class="collapse-item" href="">Produk</a>
+                            <a class="collapse-item" href="">Sub Kategori</a>
+                            <a class="collapse-item" href="">Koleksi</a>
                         </div>
                     </div>
                 </li>

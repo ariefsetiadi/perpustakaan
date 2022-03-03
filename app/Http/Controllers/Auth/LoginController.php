@@ -22,7 +22,7 @@ class LoginController extends Controller
 
     public function store(Request $request)
     {
-        $officer_id =   strtolower($request->officer_id);
+        $officer_id =   strtoupper($request->officer_id);
         $password   =   $request->password;
 
         $this->validate($request, [

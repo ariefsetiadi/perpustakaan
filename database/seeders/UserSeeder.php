@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
     {
         $users  =   [
             [
-                'officer_id'        =>  'ptg12345',
+                'officer_id'        =>  'PTG12345',
                 'fullname'          =>  'Super Admin',
                 'isAdmin'           =>  TRUE,
                 'place_of_birth'    =>  'Jakarta',
@@ -27,13 +27,13 @@ class UserSeeder extends Seeder
                 'gender'            =>  'Laki-Laki',
                 'address'           =>  'Jakarta',
                 'phone'             =>  '080012348765',
-                'password'          =>  Hash::make('ptg12345'),
+                'password'          =>  Hash::make('PTG12345'),
                 'created_at'        =>  Carbon::now()->format('Y-m-d H:i:s'),
                 'updated_at'        =>  Carbon::now()->format('Y-m-d H:i:s'),
             ],
 
             [
-                'officer_id'        =>  'ptg67890',
+                'officer_id'        =>  'PTG67890',
                 'fullname'          =>  'Petugas',
                 'isAdmin'           =>  false,
                 'place_of_birth'    =>  'Tangerang',
@@ -41,7 +41,7 @@ class UserSeeder extends Seeder
                 'gender'            =>  'Perempuan',
                 'address'           =>  'Tangerang',
                 'phone'             =>  '081198765432',
-                'password'          =>  Hash::make('ptg67890'),
+                'password'          =>  Hash::make('PTG67890'),
                 'created_at'        =>  Carbon::now()->format('Y-m-d H:i:s'),
                 'updated_at'        =>  Carbon::now()->format('Y-m-d H:i:s'),
             ]
