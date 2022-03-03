@@ -57,7 +57,7 @@
                         <div class="bg-white py-2 collapse-inner rounded">
                             <a class="collapse-item {{ (request()->segment(2) == 'petugas') ? 'active' : '' }}" href="{{ route('petugas.index') }}">Petugas</a>
                             <a class="collapse-item {{ (request()->segment(2) == 'member') ? 'active' : '' }}" href="{{ route('member.index') }}">Member</a>
-                            <a class="collapse-item" href="">Denda</a>
+                            <a class="collapse-item {{ (request()->segment(2) == 'penalty') ? 'active' : '' }}" href="{{ route('penalty.index') }}">Denda</a>
                             <a class="collapse-item" href="">Kategori</a>
                             <a class="collapse-item" href="">Sub Kategori</a>
                             <a class="collapse-item" href="">Koleksi</a>

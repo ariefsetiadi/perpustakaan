@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Auth\{LoginController, HomeController};
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\Data\MemberController;
+use App\Http\Controllers\Data\{MemberController, PenaltyController};
 
 /*
 |--------------------------------------------------------------------------
@@ -51,6 +51,12 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/trash', [AdminController::class, 'trash'])->name('petugas.trash');
                 Route::get('/restore/{id}', [AdminController::class, 'restore'])->name('petugas.restore');
                 Route::get('/reset/{id}', [AdminController::class, 'reset'])->name('petugas.reset');
+            });
+
+            Route::prefix('penalty')->group(function () {
+                Route::get('/', [PenaltyController::class, 'index'])->name('penalty.index');
+                Route::get('/edit/{id}', [PenaltyController::class, 'edit'])->name('penalty.edit');
+                Route::post('/update', [PenaltyController::class, 'update'])->name('penalty.update');
             });
         });
     });
