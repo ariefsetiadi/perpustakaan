@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Data;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use Auth;
@@ -11,7 +12,7 @@ use Validator;
 
 use App\Models\User;
 
-class AdminController extends Controller
+class OfficerController extends Controller
 {
     public function index()
     {
@@ -22,8 +23,8 @@ class AdminController extends Controller
                 ->addColumn('action', function($data) {
                     if(Auth::user()->id != $data->id) {
                         $button =  '<button type="button" id="'.$data->id.'" class="btnReset btn btn-success" title="Reset Password"><i class="fas fa-unlock"></i></button>';
-                        $button .=   '<a href="' . route('petugas.show', $data->id) . '" class="btn btn-info ml-2" title="Detail"><i class="fas fa-eye"></i></a>';
-                        $button .=   '<a href="' . route('petugas.edit', $data->id) . '" class="btn btn-warning mx-2" title="Edit"><i class="fas fa-pencil-alt"></i></a>';
+                        $button .=   '<a href="' . route('officer.show', $data->id) . '" class="btn btn-info ml-2" title="Detail"><i class="fas fa-eye"></i></a>';
+                        $button .=   '<a href="' . route('officer.edit', $data->id) . '" class="btn btn-warning mx-2" title="Edit"><i class="fas fa-pencil-alt"></i></a>';
                         $button .=  '<button type="button" id="'.$data->id.'" class="btnDelete btn btn-danger" title="Hapus"><i class="fas fa-eraser"></i></button>';
 
                         return $button;
@@ -31,7 +32,7 @@ class AdminController extends Controller
                 })->rawColumns(['action'])->addIndexColumn()->make(true);
         }
 
-        return view('admin.index', $data);
+        return view('data.officer.index', $data);
     }
 
     public function create()
@@ -40,7 +41,7 @@ class AdminController extends Controller
         $data['button']     =   'Simpan';
         $data['officer']    =   '';
 
-        return view('admin.form', $data);
+        return view('data.officer.form', $data);
     }
 
     public function store(Request $request)
@@ -112,7 +113,7 @@ class AdminController extends Controller
         $data['title']      =   'Detail Petugas';
         $data['officer']    =   User::where('isAdmin', false)->findOrFail($id);
 
-        return view('admin.detail', $data);
+        return view('data.officer.detail', $data);
     }
 
     public function edit($id)
@@ -121,7 +122,7 @@ class AdminController extends Controller
         $data['button']     =   'Update';
         $data['officer']    =   User::where('isAdmin', false)->findOrFail($id);
 
-        return view('admin.form', $data);
+        return view('data.officer.form', $data);
     }
 
     public function update(Request $request)
@@ -215,7 +216,7 @@ class AdminController extends Controller
                 })->rawColumns(['action'])->addIndexColumn()->make(true);
         }
 
-        return view('admin.trash', $data);
+        return view('data.officer.trash', $data);
     }
 
     public function restore($id)

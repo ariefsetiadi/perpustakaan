@@ -13,7 +13,7 @@
 
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <a href="{{ route('petugas.index') }}" class="btn btn-secondary" title="Kembali"><i class="fas fa-arrow-left"></i></a>
+                <a href="{{ route('officer.index') }}" class="btn btn-secondary" title="Kembali"><i class="fas fa-arrow-left"></i></a>
             </div>
 
             <div class="card-body">

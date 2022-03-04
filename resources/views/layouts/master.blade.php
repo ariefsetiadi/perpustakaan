@@ -55,7 +55,7 @@
                     </a>
                     <div id="collapseTwo" class="collapse {{ (request()->segment(1) == 'data') ? 'show' : '' }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <a class="collapse-item {{ (request()->segment(2) == 'petugas') ? 'active' : '' }}" href="{{ route('petugas.index') }}">Petugas</a>
+                            <a class="collapse-item {{ (request()->segment(2) == 'officer') ? 'active' : '' }}" href="{{ route('officer.index') }}">Petugas</a>
                             <a class="collapse-item {{ (request()->segment(2) == 'member') ? 'active' : '' }}" href="{{ route('member.index') }}">Member</a>
                             <a class="collapse-item {{ (request()->segment(2) == 'penalty') ? 'active' : '' }}" href="{{ route('penalty.index') }}">Denda</a>
                             <a class="collapse-item" href="">Kategori</a>
@@ -254,6 +254,8 @@
         <a class="scroll-to-top rounded" href="#page-top">
             <i class="fas fa-angle-up"></i>
         </a>
+
+        @include('sweetalert::alert')
 
         <!-- Bootstrap core JavaScript-->
         <script src="{{ asset('assets/vendor/jquery/jquery.min.js') }}"></script>

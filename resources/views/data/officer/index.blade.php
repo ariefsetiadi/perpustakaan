@@ -15,8 +15,8 @@
 
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <a href="{{ route('petugas.create') }}" class="btn btn-primary" title="Tambah"><i class="fas fa-plus"></i></a>
-                <a href="{{ route('petugas.trash') }}" class="btn btn-danger" title="Trash"><i class="fas fa-trash"></i></a>
+                <a href="{{ route('officer.create') }}" class="btn btn-primary" title="Tambah"><i class="fas fa-plus"></i></a>
+                <a href="{{ route('officer.trash') }}" class="btn btn-danger" title="Trash"><i class="fas fa-trash"></i></a>
             </div>
 
             <div class="card-body">
@@ -90,7 +90,7 @@
                 processing: true,
                 serverSide: true,
                 ajax:{
-                    url: "{{ route('petugas.index') }}",
+                    url: "{{ route('officer.index') }}",
                 },
                 oLanguage: {
                     sEmptyTable: 'Data Masih Kosong',
@@ -135,7 +135,7 @@
             });
 
             // Ajax Display Confirmation Delete Modal
-            var url     =   '{{ route("petugas.delete", ":id") }}';
+            var url     =   '{{ route("officer.delete", ":id") }}';
 
             $(document).on('click', '.btnDelete', function() {
                 officer_id  =   $(this).attr('id');
@@ -169,7 +169,7 @@
             });
 
             // Ajax Display Reset Password Modal
-            var url     =   '{{ route("petugas.reset", ":id") }}';
+            var url     =   '{{ route("officer.reset", ":id") }}';
 
             $(document).on('click', '.btnReset', function() {
                 officer_id  =   $(this).attr('id');

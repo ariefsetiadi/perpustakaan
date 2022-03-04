@@ -15,7 +15,7 @@
 
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <a href="{{ route('petugas.index') }}" class="btn btn-secondary" title="Kembali"><i class="fas fa-arrow-left"></i></a>
+                <a href="{{ route('officer.index') }}" class="btn btn-secondary" title="Kembali"><i class="fas fa-arrow-left"></i></a>
             </div>
 
             <div class="card-body">
@@ -73,7 +73,7 @@
                 processing: true,
                 serverSide: true,
                 ajax:{
-                    url: "{{ route('petugas.trash') }}",
+                    url: "{{ route('officer.trash') }}",
                 },
                 oLanguage: {
                     sEmptyTable: 'Data Masih Kosong',
@@ -118,7 +118,7 @@
             });
 
             // Ajax Display Confirmation Restore Modal
-            var url     =   '{{ route("petugas.restore", ":id") }}';
+            var url     =   '{{ route("officer.restore", ":id") }}';
 
             $(document).on('click', '.btnRestore', function() {
                 officer_id  =   $(this).attr('id');

@@ -40,9 +40,11 @@ class LoginController extends Controller
         if (Auth::attempt(['officer_id' => $officer_id, 'password' => $password, 'deleted_at' => null])) {
             $user = Auth::getLastAttempted();
 
+            toast('Anda Berhasil Login', 'success');
             return redirect()->route('home');
         } else {
-            return redirect()->route('login')->with('error', 'Nomor Petugas atau Password salah');
+            toast('Nomor Petugas atau Password salah', 'error');
+            return redirect()->route('login');
         }
     }
 
@@ -147,15 +149,19 @@ class LoginController extends Controller
             $user->password =   Hash::make($request->new_password);
             $user->save();
 
-            return redirect()->route('logout')->with('error', 'Password Berhasil Diubah, Silakan Login Ulang');
+            toast('Password Berhasil Diubah', 'success');
+            return redirect()->route('home');
         } else {
-            return redirect()->back()->with('error', 'Password Saat Ini Salah');
+            toast('Password Saat Ini Salah', 'error');
+            return redirect()->back();
         }
     }
 
     public function logout()
     {
         Auth::logout();
+
+        toast('Anda Berhasil Logout', 'success');
         return redirect()->route('login');
     }
 }
