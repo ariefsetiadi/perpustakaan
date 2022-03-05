@@ -61,7 +61,7 @@ class MemberController extends Controller
                         [
                             'member_code.required'      =>  'ID Member wajib diisi',
                             'member_code.max'           =>  'ID Member maksimal 10 karakter',
-                            'member_code.regex'         =>  'ID Member hanya boleh huruf dan spasi',
+                            'member_code.regex'         =>  'ID Member hanya boleh huruf dan angka',
                             'member_code.unique'        =>  'ID Member sudah digunakan',
                             'fullname.required'         =>  'Nama Lengkap wajib diisi',
                             'fullname.max'              =>  'Nama Lengkap maksimal 255 karakter',
@@ -143,7 +143,7 @@ class MemberController extends Controller
                         [
                             'member_code.required'      =>  'ID Member wajib diisi',
                             'member_code.max'           =>  'ID Member maksimal 20 karakter',
-                            'member_code.regex'         =>  'ID Member hanya boleh huruf dan spasi',
+                            'member_code.regex'         =>  'ID Member hanya boleh huruf dan angka',
                             'member_code.unique'        =>  'ID Member sudah digunakan',
                             'fullname.required'         =>  'Nama Lengkap wajib diisi',
                             'fullname.max'              =>  'Nama Lengkap maksimal 255 karakter',

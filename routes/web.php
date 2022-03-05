@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Auth\{LoginController, HomeController};
-use App\Http\Controllers\Data\{OfficerController, MemberController, PenaltyController};
+use App\Http\Controllers\Data\{OfficerController, MemberController, PenaltyController, CategoryController};
 
 /*
 |--------------------------------------------------------------------------
@@ -56,6 +56,16 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/', [PenaltyController::class, 'index'])->name('penalty.index');
                 Route::get('/edit/{id}', [PenaltyController::class, 'edit'])->name('penalty.edit');
                 Route::post('/update', [PenaltyController::class, 'update'])->name('penalty.update');
+            });
+
+            Route::prefix('category')->group(function () {
+                Route::get('/', [CategoryController::class, 'index'])->name('category.index');
+                Route::post('/store', [CategoryController::class, 'store'])->name('category.store');
+                Route::get('/edit/{id}', [CategoryController::class, 'edit'])->name('category.edit');
+                Route::post('/update', [CategoryController::class, 'update'])->name('category.update');
+                Route::get('/delete/{id}', [CategoryController::class, 'destroy'])->name('category.delete');
+                Route::get('/trash', [CategoryController::class, 'trash'])->name('category.trash');
+                Route::get('/restore/{id}', [CategoryController::class, 'restore'])->name('category.restore');
             });
         });
     });

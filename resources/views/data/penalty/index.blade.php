@@ -137,6 +137,7 @@
                     dataType: "json",
                     success: function(html) {
                         $('.modal-title').text("Edit Denda");
+                        $('#penaltyForm').trigger("reset");
                         $('#formModal').modal("show");
 
                         $('#penalty_id').val(html.data.id);

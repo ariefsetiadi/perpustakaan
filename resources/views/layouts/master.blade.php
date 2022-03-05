@@ -58,7 +58,7 @@
                             <a class="collapse-item {{ (request()->segment(2) == 'officer') ? 'active' : '' }}" href="{{ route('officer.index') }}">Petugas</a>
                             <a class="collapse-item {{ (request()->segment(2) == 'member') ? 'active' : '' }}" href="{{ route('member.index') }}">Member</a>
                             <a class="collapse-item {{ (request()->segment(2) == 'penalty') ? 'active' : '' }}" href="{{ route('penalty.index') }}">Denda</a>
-                            <a class="collapse-item" href="">Kategori</a>
+                            <a class="collapse-item {{ (request()->segment(2) == 'category') ? 'active' : '' }}" href="{{ route('category.index') }}">Kategori</a>
                             <a class="collapse-item" href="">Sub Kategori</a>
                             <a class="collapse-item" href="">Koleksi</a>
                         </div>

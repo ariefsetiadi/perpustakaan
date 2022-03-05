@@ -15,18 +15,17 @@
 
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <a href="{{ route('member.index') }}" class="btn btn-secondary" title="Kembali"><i class="fas fa-arrow-left"></i></a>
+                <a href="{{ route('category.index') }}" class="btn btn-secondary" title="Kembali"><i class="fas fa-arrow-left"></i></a>
             </div>
 
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered" width="100%" cellspacing="0" id="memberTable">
+                    <table class="table table-bordered" width="100%" cellspacing="0" id="categoryTable">
                         <thead>
                             <tr>
                                 <th>No.</th>
-                                <th>ID Member</th>
-                                <th>Nama Lengkap</th>
-                                <th>Telepon</th>
+                                <th>Nama Kategori</th>
+                                <th>Deskripsi</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -45,7 +44,7 @@
                     <div class="modal-body">
                         <div class="text-center my-3">
                             <img src="{{ asset('assets/img/confirm-delete.svg') }}">
-                            <h5 class="my-3" style="color: #1f1f1f">Anda Yakin Ingin Memulihkan Member Ini?</h5>
+                            <h5 class="my-3" style="color: #1f1f1f">Anda Yakin Ingin Memulihkan Kategori Ini?</h5>
                             <button type="button" class="btn btn-secondary mr-1" id="btnNo" data-dismiss="modal"></button>
                             <button type="submit" class="btn btn-success ml-1" id="btnYes"></button>
                         </div>
@@ -69,11 +68,11 @@
     <script type="text/javascript">
         $(document).ready(function () {
             // Ajax Display Data to DataTables
-            var table   =   $('#memberTable').DataTable({
+            var table   =   $('#categoryTable').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax:{
-                    url: "{{ route('member.trash') }}",
+                    url: "{{ route('category.trash') }}",
                 },
                 oLanguage: {
                     sEmptyTable: 'Data Masih Kosong',
@@ -85,16 +84,12 @@
                         name: 'DT_RowIndex'
                     },
                     {
-                        data: 'member_code',
-                        name: 'member_code'
+                        data: 'name',
+                        name: 'name'
                     },
                     {
-                        data: 'fullname',
-                        name: 'fullname'
-                    },
-                    {
-                        data: 'phone',
-                        name: 'phone'
+                        data: 'description',
+                        name: 'description'
                     },
                     {
                         data: 'action',
@@ -110,18 +105,18 @@
                         width: '10%'
                     },
                     {
-                        targets: 4,
+                        targets: 3,
                         className: 'text-center',
-                        width: '25%'
+                        width: '15%'
                     }
                 ]
             });
 
             // Ajax Display Confirmation Restore Modal
-            var url     =   '{{ route("member.restore", ":id") }}';
+            var url     =   '{{ route("category.restore", ":id") }}';
 
             $(document).on('click', '.btnRestore', function() {
-                member_id   =   $(this).attr('id');
+                category_id   =   $(this).attr('id');
                 $('#btnNo').text("Batal");
                 $('#btnYes').text("Ya, Pulihkan");
                 $('#confirmModal').modal("show");
@@ -130,7 +125,7 @@
             // Ajax Restore Data
             $('#btnYes').click(function() {
                 $.ajax({
-                    url: url.replace(":id", member_id),
+                    url: url.replace(":id", category_id),
                     beforeSend: function() {
                         $('#btnYes').text('Memulihkan...');
                     },
@@ -138,12 +133,12 @@
                     success: function(data) {
                         setTimeout(function() {
                             $('#confirmModal').modal('hide');
-                            $('#memberTable').DataTable().ajax.reload();
+                            $('#categoryTable').DataTable().ajax.reload();
                         });
 
                         Swal.fire({
                             title: 'Sukses',
-                            text: 'Member Berhasil Dipulihkan',
+                            text: 'Kategori Berhasil Dipulihkan',
                             icon: 'success',
                             timer: 2000
                         });
