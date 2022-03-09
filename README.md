@@ -30,6 +30,7 @@ Content Management System - Perpustakaan : Web aplikasi sederhana untuk transaks
 -   [x] Setelah clone selesai, masuk ke folder **perpustakaan**
 -   [x] Jalankan **composer install**
 -   [x] Duplicate atau rename file **.env.example** ke **.env**
+-   [x] Jalankan **php artisan key:generate** untuk mendapatkan **APP_KEY**
 -   [x] Buka file **.env** dan ganti,
     -   **APP_NAME** -> tidak wajib
     -   **DB_CONNECTION** -> sesuaikan dengan koneksi mysql anda
