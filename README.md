@@ -6,7 +6,8 @@
 -   [x] <a href="https://getcomposer.org/" target="_blank">Composer</a>
 -   [x] <a href="https://yajrabox.com/docs/laravel-datatables/master/installation" target="_blank">Yajra DataTables</a>
 -   [x] <a href="https://realrashid.github.io/sweet-alert/" target="_blank">Real Rashid Sweet Alert</a>
--   [x] <a href="hhttps://sweetalert2.github.io/" target="_blank">Sweet Alert 2</a>
+-   [x] <a href="https://sweetalert2.github.io/" target="_blank">Sweet Alert 2</a>
+-   [x] <a href="https://fontawesome.com/" target="_blank">Font Awesome</a>
 
 ## Title
 
@@ -38,4 +39,4 @@ Content Management System - Perpustakaan : Web aplikasi sederhana untuk transaks
     -   **DB_USERNAME** -> sesuaikan dengan username mysql anda
     -   **DB_PASSWORD** -> sesuaikan dengan password mysql anda
 -   [x] Jalankan **php artisan migrate** untuk migrasi semua table
--   [x] Terakhir, jalankan **php artisan db:seed** untuk insert data user palsu ke database (admin dan petugas/officer)
+-   [x] Terakhir, jalankan **php artisan db:seed** untuk insert faker data user ke database (admin dan petugas/officer)
