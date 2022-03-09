@@ -6,17 +6,22 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
-class Category extends Model
+class Collection extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
+        'category_id',
+        'code',
         'name',
+        'register_date',
+        'stock',
         'description',
+        'image',
     ];
 
-    public function collection()
+    public function category()
     {
-        return $this->hasMany(Collection::class);
+        return $this->belongsTo(Category::class);
     }
 }

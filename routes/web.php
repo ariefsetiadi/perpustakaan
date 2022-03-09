@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Auth\{LoginController, HomeController};
-use App\Http\Controllers\Data\{OfficerController, MemberController, PenaltyController, CategoryController};
+use App\Http\Controllers\Data\{OfficerController, MemberController, PenaltyController, CategoryController, CollectionController};
 
 /*
 |--------------------------------------------------------------------------
@@ -66,6 +66,20 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/delete/{id}', [CategoryController::class, 'destroy'])->name('category.delete');
                 Route::get('/trash', [CategoryController::class, 'trash'])->name('category.trash');
                 Route::get('/restore/{id}', [CategoryController::class, 'restore'])->name('category.restore');
+            });
+
+            Route::prefix('collection')->group(function () {
+                Route::get('/', [CollectionController::class, 'index'])->name('collection.index');
+                Route::get('/create', [CollectionController::class, 'create'])->name('collection.create');
+                Route::post('/store', [CollectionController::class, 'store'])->name('collection.store');
+                Route::get('/edit-stock/{id}', [CollectionController::class, 'editStock'])->name('collection.editStock');
+                Route::post('/update-stock', [CollectionController::class, 'updateStock'])->name('collection.updateStock');
+                Route::get('/detail/{id}', [CollectionController::class, 'show'])->name('collection.show');
+                Route::get('/edit/{id}', [CollectionController::class, 'edit'])->name('collection.edit');
+                Route::post('/update', [CollectionController::class, 'update'])->name('collection.update');
+                Route::get('/delete/{id}', [CollectionController::class, 'destroy'])->name('collection.delete');
+                Route::get('/trash', [CollectionController::class, 'trash'])->name('collection.trash');
+                Route::get('/restore/{id}', [CollectionController::class, 'restore'])->name('collection.restore');
             });
         });
     });

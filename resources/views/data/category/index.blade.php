@@ -53,9 +53,8 @@
                         @csrf
 
                         <div class="modal-body">
-                            <span id="form_result" class="alerts"></span>
-
                             <input type="hidden" name="category_id" id="category_id">
+
                             <div class="form-group">
                                 <label>Nama Kategori</label>
                                 <input type="text" name="name" id="name" class="form-control" placeholder="Nama Kategori">
@@ -170,7 +169,7 @@
                     success: function(html) {
                         $('.modal-title').text("Edit Kategori");
                         $('#btnSave').text("Update");
-                        $('#formModal').trigger("reset");
+                        $('#categoryForm').trigger("reset");
                         $('#formModal').modal("show");
 
                         $('#category_id').val(html.data.id);

@@ -9,6 +9,9 @@
 
         <title>{{ $title == '' ? config('app.name') : $title . ' - ' . config('app.name') }}</title>
 
+        <!-- Favicon -->
+        <link rel="icon" href="{{ asset('assets/img/icon/building-solid.svg') }}" type="image/gif">
+
         <!-- Custom fonts for this template-->
         <link href="{{ asset('assets/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
@@ -59,8 +62,7 @@
                             <a class="collapse-item {{ (request()->segment(2) == 'member') ? 'active' : '' }}" href="{{ route('member.index') }}">Member</a>
                             <a class="collapse-item {{ (request()->segment(2) == 'penalty') ? 'active' : '' }}" href="{{ route('penalty.index') }}">Denda</a>
                             <a class="collapse-item {{ (request()->segment(2) == 'category') ? 'active' : '' }}" href="{{ route('category.index') }}">Kategori</a>
-                            <a class="collapse-item" href="">Sub Kategori</a>
-                            <a class="collapse-item" href="">Koleksi</a>
+                            <a class="collapse-item {{ (request()->segment(2) == 'collection') ? 'active' : '' }}" href="{{ route('collection.index') }}">Koleksi</a>
                         </div>
                     </div>
                 </li>
