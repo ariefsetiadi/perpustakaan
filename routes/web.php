@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Auth\{LoginController, HomeController};
 use App\Http\Controllers\Data\{OfficerController, MemberController, PenaltyController, CategoryController, CollectionController};
+use App\Http\Controllers\Transaction\LoanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -80,6 +81,20 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/delete/{id}', [CollectionController::class, 'destroy'])->name('collection.delete');
                 Route::get('/trash', [CollectionController::class, 'trash'])->name('collection.trash');
                 Route::get('/restore/{id}', [CollectionController::class, 'restore'])->name('collection.restore');
+            });
+        });
+
+        Route::prefix('transaction')->group(function () {
+            Route::prefix('loan')->group(function () {
+                Route::get('/', [LoanController::class, 'index'])->name('loan.index');
+                Route::get('/create', [LoanController::class, 'create'])->name('loan.create');
+                Route::post('/store', [LoanController::class, 'store'])->name('loan.store');
+                Route::get('/detail/{id}', [LoanController::class, 'show'])->name('loan.show');
+
+                // Cart
+                Route::get('/getCollection', [LoanController::class, 'getCollection'])->name('cart.getCollection');
+                Route::post('/cart/store', [LoanController::class, 'addCart'])->name('cart.store');
+                Route::get('/deleteCart/{id}', [LoanController::class, 'deleteCart'])->name('cart.deleteCart');
             });
         });
     });

@@ -24,4 +24,14 @@ class Collection extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    public function loanDetail()
+    {
+        return $this->hasMany(LoanDetail::class);
+    }
+
+    public function cart()
+    {
+        return $this->hasMany(Cart::class);
+    }
 }

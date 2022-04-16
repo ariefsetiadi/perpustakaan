@@ -68,6 +68,43 @@
                 </li>
 
                 <!-- Divider -->
+                <hr class="sidebar-divider my-0">
+
+                <!-- Nav Item - Pages Collapse Menu -->
+                <li class="nav-item {{ (request()->segment(1) == 'transaction') ? 'active' : '' }}">
+                    <a class="nav-link {{ (request()->segment(1) == 'transaction') ? '' : 'collapsed' }}" href="#" data-toggle="collapse" data-target="#collapseThree"
+                        aria-expanded="true" aria-controls="collapseThree">
+                        <i class="fas fa-fw fa-exchange-alt"></i>
+                        <span>Transaksi</span>
+                    </a>
+                    <div id="collapseThree" class="collapse {{ (request()->segment(1) == 'transaction') ? 'show' : '' }}" aria-labelledby="headingThree" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <a class="collapse-item {{ (request()->segment(2) == 'loan') ? 'active' : '' }}" href="{{ route('loan.index') }}">Peminjaman</a>
+                            <a class="collapse-item" href="#">Pengembalian</a>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- Divider -->
+                <hr class="sidebar-divider my-0">
+
+                <!-- Nav Item - Pages Collapse Menu -->
+                <li class="nav-item {{ (request()->segment(1) == 'report') ? 'active' : '' }}">
+                    <a class="nav-link {{ (request()->segment(1) == 'report') ? '' : 'collapsed' }}" href="#" data-toggle="collapse" data-target="#collapseFour"
+                        aria-expanded="true" aria-controls="collapseFour">
+                        <i class="fas fa-fw fa-clipboard-list"></i>
+                        <span>Laporan</span>
+                    </a>
+                    <div id="collapseFour" class="collapse {{ (request()->segment(1) == 'report') ? 'show' : '' }}" aria-labelledby="headingFour" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <a class="collapse-item" href="#">Koleksi</a>
+                            <a class="collapse-item" href="#">Peminjaman</a>
+                            <a class="collapse-item" href="#">Pengembalian</a>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- Divider -->
                 <hr class="sidebar-divider d-none d-md-block">
 
                 <!-- Sidebar Toggler (Sidebar) -->

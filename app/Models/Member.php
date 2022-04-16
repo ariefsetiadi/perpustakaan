@@ -20,4 +20,9 @@ class Member extends Model
         'phone',
         'image',
     ];
+
+    public function loan()
+    {
+        return $this->hasMany(Loan::class);
+    }
 }
