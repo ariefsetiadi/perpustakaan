@@ -135,7 +135,7 @@
             });
 
             // Ajax Display Confirmation Delete Modal
-            var url     =   '{{ route("officer.delete", ":id") }}';
+            var urlDelete   =   '{{ route("officer.delete", ":id") }}';
 
             $(document).on('click', '.btnDelete', function() {
                 officer_id  =   $(this).attr('id');
@@ -147,12 +147,12 @@
             // Ajax Delete Data
             $('#btnYes').click(function() {
                 $.ajax({
-                    url: url.replace(":id", officer_id),
+                    url: urlDelete.replace(":id", officer_id),
                     beforeSend: function() {
                         $('#btnYes').text('Menghapus...');
                     },
 
-                    success: function(data) {
+                    success: function(res) {
                         setTimeout(function() {
                             $('#confirmModal').modal('hide');
                             $('#userTable').DataTable().ajax.reload();
@@ -160,7 +160,7 @@
 
                         Swal.fire({
                             title: 'Sukses',
-                            text: 'Petugas Berhasil Dihapus',
+                            text: res.messages,
                             icon: 'success',
                             timer: 2000
                         });
@@ -194,7 +194,7 @@
 
                         Swal.fire({
                             title: 'Sukses',
-                            text: 'Password Berhasil Direset',
+                            text: data.messages,
                             icon: 'success',
                             timer: 2000
                         });

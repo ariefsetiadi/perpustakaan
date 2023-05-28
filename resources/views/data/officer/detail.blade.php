@@ -20,7 +20,7 @@
                 <div class="row">
                     <div class="col-lg-4 col-md-12 d-flex justify-content-center">
                         @if(!empty($officer->image))
-                            <img class="img-thumbnail w-75" src="{{ asset('uploads/users/' . $officer->image) }}" alt="">
+                            <img class="img-thumbnail w-75" src="{{ asset('uploads/officers/' . $officer->image) }}" alt="">
                         @else
                             <img class="img-thumbnail w-75" src="{{ asset('assets/img/no-image.png') }}" alt="">
                         @endif

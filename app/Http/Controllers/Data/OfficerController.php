@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Data;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\OfficerRequest;
 
 use Auth;
 use File;
 use Hash;
-use Validator;
 
 use App\Models\User;
 
@@ -44,161 +44,109 @@ class OfficerController extends Controller
         return view('data.officer.form', $data);
     }
 
-    public function store(Request $request)
+    public function store(OfficerRequest $request)
     {
-        $officer_id =   strtoupper($request->officer_id);
-        $image      =   $request->image;
-        $image_name =   NULL;
+        try {
+            $officer_id =   strtoupper($request->officer_id);
+            $path       =   'uploads/officers';
+            $image      =   $request->image;
+            $image_name =   NULL;
 
-        $validate   =   Validator::make($request->all(), [
-                            'officer_id'        =>  'required|max:20|regex:/^[a-zA-Z0-9]*$/||unique:users,officer_id',
-                            'fullname'          =>  'required|max:255|regex:/^[a-zA-Z ]*$/',
-                            'place_of_birth'    =>  'required|max:255',
-                            'date_of_birth'     =>  'required|date',
-                            'gender'            =>  'required|in:Laki-Laki,Perempuan',
-                            'address'           =>  'required',
-                            'phone'             =>  'required|digits_between:10,15|unique:users,phone',
-                            'image'             =>  'max:5120',
-                            'image.*'           =>  'mimes:jpg,jpeg,png',
-                        ],
-                        [
-                            'officer_id.required'       =>  'Nomor Petugas wajib diisi',
-                            'officer_id.max'            =>  'Nomor Petugas maksimal 20 karakter',
-                            'officer_id.regex'          =>  'Nomor Petugas hanya boleh huruf dan spasi',
-                            'officer_id.unique'         =>  'Nomor Petugas sudah digunakan',
-                            'fullname.required'         =>  'Nama Lengkap wajib diisi',
-                            'fullname.max'              =>  'Nama Lengkap maksimal 255 karakter',
-                            'fullname.regex'            =>  'Nama Lengkap hanya boleh huruf dan spasi',
-                            'place_of_birth.required'   =>  'Tempat Lahir wajib diisi',
-                            'place_of_birth.max'        =>  'Tempat Lahir maksimal 255 karakter',
-                            'date_of_birth.required'    =>  'Tanggal Lahir wajib diisi',
-                            'date_of_birth.date'        =>  'Tanggal Lahir tidak valid',
-                            'gender.required'           =>  'Jenis Kelamin wajib dipilih',
-                            'gender.in'                 =>  'Jenis Kelamin tidak valid',
-                            'address.required'          =>  'Alamat wajib diisi',
-                            'phone.required'            =>  'Telepon wajib diisi',
-                            'phone.digits_between'      =>  'Telepon 10 - 15 angka',
-                            'phone.unique'              =>  'Telepon sudah digunakan',
-                            'image.max'                 =>  'Foto maksimal 5 Mb',
-                            'image.mimes'               =>  'Foto hanya boleh format jpg, jpeg, atau png',
-                        ]);
+            if($image != NULL) {
+                $image_name =   'officers_' . $officer_id . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path($path), $image_name);
+            }
 
-        if($validate->fails()) {
-            return response()->json(['errors' => $validate->errors()]);
+            $user                   =   new User;
+            $user->officer_id       =   $officer_id;
+            $user->fullname         =   ucwords(strtolower($request->fullname));
+            $user->isAdmin          =   false;
+            $user->place_of_birth   =   ucwords(strtolower($request->place_of_birth));
+            $user->date_of_birth    =   $request->date_of_birth;
+            $user->gender           =   $request->gender;
+            $user->address          =   $request->address;
+            $user->phone            =   $request->phone;
+            $user->image            =   $image_name;
+            $user->password         =   Hash::make($officer_id);
+            $user->save();
+
+            return response()->json(['messages' => 'Petugas Berhasil Disimpan']);
+        } catch (\Throwable $th) {
+            return response()->json(['messages' => 'Petugas Gagal Disimpan']);
         }
-
-        if($image != NULL) {
-            $image_name =   'users_' . $officer_id . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('/uploads/users'), $image_name);
-        }
-
-        $user                   =   new User;
-        $user->officer_id       =   $officer_id;
-        $user->fullname         =   ucwords(strtolower($request->fullname));
-        $user->isAdmin          =   false;
-        $user->place_of_birth   =   ucwords(strtolower($request->place_of_birth));
-        $user->date_of_birth    =   $request->date_of_birth;
-        $user->gender           =   $request->gender;
-        $user->address          =   $request->address;
-        $user->phone            =   $request->phone;
-        $user->image            =   $image_name;
-        $user->password         =   Hash::make($officer_id);
-        $user->save();
-
-        return response()->json(['success' => 'Petugas Berhasil Disimpan']);
     }
 
     public function show($id)
     {
-        $data['title']      =   'Detail Petugas';
-        $data['officer']    =   User::where('isAdmin', false)->findOrFail($id);
+        try {
+            $data['title']      =   'Detail Petugas';
+            $data['officer']    =   User::where('isAdmin', false)->findOrFail($id);
 
-        return view('data.officer.detail', $data);
+            return view('data.officer.detail', $data);
+        } catch (\Throwable $th) {
+            return redirect()->route('officer.index');
+        }
     }
 
     public function edit($id)
     {
-        $data['title']      =   'Edit Petugas';
-        $data['button']     =   'Update';
-        $data['officer']    =   User::where('isAdmin', false)->findOrFail($id);
+        try {
+            $data['title']      =   'Detail Petugas';
+            $data['button']     =   'Update';
+            $data['officer']    =   User::where('isAdmin', false)->findOrFail($id);
 
-        return view('data.officer.form', $data);
+            return view('data.officer.form', $data);
+        } catch (\Throwable $th) {
+            return redirect()->route('officer.index');
+        }
     }
 
-    public function update(Request $request)
+    public function update(OfficerRequest $request)
     {
-        $officer    =   User::where('isAdmin', false)->findOrFail($request->off_id);
-        $image_name =   $officer->image;
+        try {
+            $officer    =   User::where('isAdmin', false)->findOrFail($id);
 
-        $officer_id =   strtoupper($request->officer_id);
-        $image      =   $request->image;
+            $path       =   'uploads/officers';
+            $image_name =   $officer->image;
 
-        $validate   =   Validator::make($request->all(), [
-                            'officer_id'        =>  'required|max:20|regex:/^[a-zA-Z0-9]*$/||unique:users,officer_id,' . $request->off_id,
-                            'fullname'          =>  'required|max:255|regex:/^[a-zA-Z ]*$/',
-                            'place_of_birth'    =>  'required|max:255',
-                            'date_of_birth'     =>  'required|date',
-                            'gender'            =>  'required|in:Laki-Laki,Perempuan',
-                            'address'           =>  'required',
-                            'phone'             =>  'required|digits_between:10,15|unique:users,phone,' . $request->off_id,
-                            'image'             =>  'max:5120',
-                            'image.*'           =>  'mimes:jpg,jpeg,png',
-                        ],
-                        [
-                            'officer_id.required'       =>  'Nomor Petugas wajib diisi',
-                            'officer_id.max'            =>  'Nomor Petugas maksimal 20 karakter',
-                            'officer_id.regex'          =>  'Nomor Petugas hanya boleh huruf dan spasi',
-                            'officer_id.unique'         =>  'Nomor Petugas sudah digunakan',
-                            'fullname.required'         =>  'Nama Lengkap wajib diisi',
-                            'fullname.max'              =>  'Nama Lengkap maksimal 255 karakter',
-                            'fullname.regex'            =>  'Nama Lengkap hanya boleh huruf dan spasi',
-                            'place_of_birth.required'   =>  'Tempat Lahir wajib diisi',
-                            'place_of_birth.max'        =>  'Tempat Lahir maksimal 255 karakter',
-                            'date_of_birth.required'    =>  'Tanggal Lahir wajib diisi',
-                            'date_of_birth.date'        =>  'Tanggal Lahir tidak valid',
-                            'gender.required'           =>  'Jenis Kelamin wajib dipilih',
-                            'gender.in'                 =>  'Jenis Kelamin tidak valid',
-                            'address.required'          =>  'Alamat wajib diisi',
-                            'phone.required'            =>  'Telepon wajib diisi',
-                            'phone.digits_between'      =>  'Telepon 10 - 15 angka',
-                            'phone.unique'              =>  'Telepon sudah digunakan',
-                            'image.max'                 =>  'Foto maksimal 5 Mb',
-                            'image.mimes'               =>  'Foto hanya boleh format jpg, jpeg, atau png',
-                        ]);
+            $officer_id =   strtoupper($request->officer_id);
+            $image      =   $request->image;
 
-        if($validate->fails()) {
-            return response()->json(['errors' => $validate->errors()]);
+            if($image != NULL) {
+                File::delete('uploads/officers/' . $officer->image);
+    
+                $image_name =   'officers_' . $officer_id . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path($path), $image_name);
+            }
+
+            $user   =   array(
+                'officer_id'        =>  $request->officer_id,
+                'fullname'          =>  ucwords(strtolower($request->fullname)),
+                'place_of_birth'    =>  ucwords(strtolower($request->place_of_birth)),
+                'date_of_birth'     =>  $request->date_of_birth,
+                'gender'            =>  $request->gender,
+                'address'           =>  $request->address,
+                'phone'             =>  $request->phone,
+                'image'             =>  $image_name,
+            );
+
+            User::whereId($request->off_id)->update($user);
+            return response()->json(['messages' => 'Petugas Berhasil Diupdate']);
+        } catch (\Throwable $th) {
+            return response()->json(['messages' => 'Petugas Gagal Diupdate']);
         }
-
-        if($image != NULL) {
-            File::delete('uploads/users/' . $officer->image);
-
-            $image_name =   'users_' . $officer_id . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('/uploads/users'), $image_name);
-        }
-
-        $user   =   array(
-                    'officer_id'        =>  $request->officer_id,
-                    'fullname'          =>  ucwords(strtolower($request->fullname)),
-                    'place_of_birth'    =>  ucwords(strtolower($request->place_of_birth)),
-                    'date_of_birth'     =>  $request->date_of_birth,
-                    'gender'            =>  $request->gender,
-                    'address'           =>  $request->address,
-                    'phone'             =>  $request->phone,
-                    'image'             =>  $image_name,
-                );
-
-        User::whereId($request->off_id)->update($user);
-
-        return response()->json(['success' => 'Petugas Berhasil Diupdate']);
     }
 
     public function destroy($id)
     {
-        $officer    =   User::findOrFail($id);
-        $officer->delete();
+        try {
+            $officer    =   User::findOrFail($id);
+            $officer->delete();
 
-        return response()->json(['success' => 'Petugas Berhasil Dihapus']);
+            return response()->json(['messages' => 'Petugas Berhasil Dihapus']);
+        } catch (\Throwable $th) {
+            return response()->json(['messages' => 'Petugas Gagal Dihapus']);
+        }
     }
 
     public function trash()
@@ -221,18 +169,26 @@ class OfficerController extends Controller
 
     public function restore($id)
     {
-        $officer    =   User::withTrashed()->findOrFail($id);
-        $officer->restore();
+        try {
+            $officer    =   User::withTrashed()->findOrFail($id);
+            $officer->restore();
 
-        return response()->json(['success' => 'Petugas Berhasil Dipulihkan']);
+            return response()->json(['messages' => 'Petugas Berhasil Dipulihkan']);
+        } catch (\Throwable $th) {
+            return response()->json(['messages' => 'Petugas Gagal Dipulihkan']);
+        }
     }
 
     public function reset($id)
     {
-        $officer            =   User::findOrFail($id);
-        $officer->password  =   Hash::make($officer->officer_id);
-        $officer->save();
+        try {
+            $officer            =   User::findOrFail($id);
+            $officer->password  =   Hash::make($officer->officer_id);
+            $officer->save();
 
-        return response()->json(['success' => 'Password Berhasil Direset']);
+            return response()->json(['messages' => 'Password Petugas Berhasil Direset']);
+        } catch (\Throwable $th) {
+            return response()->json(['messages' => 'Password Petugas Gagal Direset']);
+        }
     }
 }

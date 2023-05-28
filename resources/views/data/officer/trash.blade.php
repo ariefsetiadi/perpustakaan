@@ -143,7 +143,7 @@
 
                         Swal.fire({
                             title: 'Sukses',
-                            text: 'Petugas Berhasil Dipulihkan',
+                            text: data.messages,
                             icon: 'success',
                             timer: 2000
                         });
