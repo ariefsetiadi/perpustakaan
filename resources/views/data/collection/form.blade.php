@@ -24,7 +24,7 @@
                         <input type="hidden" name="collection_id" id="collection_id" value="{{ $collection ? $collection->id : ''}}">
 
                         <div class="row">
-                            <div class="col-lg-6 col-md-12">
+                            <div class="col-lg-4 col-md-12">
                                 <div class="form-group">
                                     <label>Kategori</label>
                                     <select name="category_id" id="category_id" class="form-control">
@@ -41,11 +41,19 @@
                                 </div>
                             </div>
 
-                            <div class="col-lg-6 col-md-12">
+                            <div class="col-lg-4 col-md-12">
                                 <div class="form-group">
                                     <label>ID Koleksi</label>
                                     <input type="text" name="code" id="code" class="form-control" placeholder="ID Koleksi" value="{{ $collection ? $collection->code : '' }}">
                                     <span class="text-danger" id="code_error"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 col-md-12">
+                                <div class="form-group">
+                                    <label>Nama Koleksi</label>
+                                    <input type="text" name="name" id="name" class="form-control" placeholder="Nama Koleksi" value="{{ $collection ? $collection->name : '' }}">
+                                    <span class="text-danger" id="name_error"></span>
                                 </div>
                             </div>
                         </div>
@@ -53,9 +61,9 @@
                         <div class="row">
                             <div class="col-lg-6 col-md-12">
                                 <div class="form-group">
-                                    <label>Nama Koleksi</label>
-                                    <input type="text" name="name" id="name" class="form-control" placeholder="Nama Koleksi" value="{{ $collection ? $collection->name : '' }}">
-                                    <span class="text-danger" id="name_error"></span>
+                                    <label>Harga</label>
+                                    <input type="number" name="price" id="price" class="form-control" placeholder="Harga" value="{{ $collection ? $collection->price : '' }}">
+                                    <span class="text-danger" id="price_error"></span>
                                 </div>
                             </div>
 
@@ -119,11 +127,12 @@
 
                 // Ajax Save collection
                 if($('#btnSave').text() == 'Simpan') {
-                    $('#category_id_error').html();
-                    $('#code_error').html();
-                    $('#name_error').html();
-                    $('#register_date_error').html();
-                    $('#image_error').html();
+                    $('#category_id_error').text();
+                    $('#code_error').text();
+                    $('#name_error').text();
+                    $('#price_error').text();
+                    $('#register_date_error').text();
+                    $('#image_error').text();
 
                     $.ajax({
                         url: "{{ route('collection.store') }}",
@@ -134,57 +143,42 @@
                         processData: false,
                         dataType:"json",
 
-                        success: function(data) {
-                            if(data.errors) {
-                                if(data.errors.category_id) {
-                                    $("#category_id_error").html(data.errors.category_id[0]);
-                                    $("#category_id").addClass("is-invalid");
-                                }
+                        beforeSend: function() {
+							$('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Menyimpan...');
+						},
 
-                                if(data.errors.code) {
-                                    $("#code_error").html(data.errors.code[0]);
-                                    $("#code").addClass("is-invalid");
-                                }
+                        success: function(res) {
+                            Swal.fire({
+                                title: 'Sukses',
+                                text: res.messages,
+                                icon: 'success',
+                                timer: 2000
+                            }).then(function() {
+                                window.location.href = "{{ route('collection.index') }}";
+                            });
+                        },
 
-                                if(data.errors.name) {
-                                    $("#name_error").html(data.errors.name[0]);
-                                    $("#name").addClass("is-invalid");
-                                }
-
-                                if(data.errors.register_date) {
-                                    $("#register_date_error").html(data.errors.register_date[0]);
-                                    $("#register_date").addClass("is-invalid");
-                                }
-
-                                if(data.errors.image) {
-                                    $("#image_error").html(data.errors.image[0]);
-                                    $("#image").addClass("is-invalid");
-                                }
-                            }
-
-                            if(data.success) {
-                                $('#collectionForm')[0].reset();
-
-                                Swal.fire({
-                                    title: 'Sukses',
-                                    text: 'Koleksi Berhasil Disimpan',
-                                    icon: 'success',
-                                    timer: 2000
-                                }).then(function() {
-                                    window.location.href = "{{ route('collection.index') }}";
-                                });
-                            }
+                        error: function(reject) {
+                            setTimeout(function() {
+								$('#btnSave').text('Simpan');
+								var response = $.parseJSON(reject.responseText);
+								$.each(response.errors, function (key, val) {
+									$('#' + key + "_error").text(val[0]);
+									$('#' + key).addClass('is-invalid');
+								});
+							});
                         }
                     });
                 }
 
                 // Ajax Update collection
                 if($('#btnSave').text() == 'Update') {
-                    $('#category_id_error').html();
-                    $('#code_error').html();
-                    $('#name_error').html();
-                    $('#register_date_error').html();
-                    $('#image_error').html();
+                    $('#category_id_error').text();
+                    $('#code_error').text();
+                    $('#name_error').text();
+                    $('#price_error').text();
+                    $('#register_date_error').text();
+                    $('#image_error').text();
 
                     $.ajax({
                         url: "{{ route('collection.update') }}",
@@ -195,46 +189,30 @@
                         processData: false,
                         dataType:"json",
 
-                        success: function(data) {
-                            if(data.errors) {
-                                if(data.errors.category_id) {
-                                    $("#category_id_error").html(data.errors.category_id[0]);
-                                    $("#category_id").addClass("is-invalid");
-                                }
+                        beforeSend: function() {
+							$('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Mengupdate...');
+						},
 
-                                if(data.errors.code) {
-                                    $("#code_error").html(data.errors.code[0]);
-                                    $("#code").addClass("is-invalid");
-                                }
+                        success: function(res) {
+                            Swal.fire({
+                                title: 'Sukses',
+                                text: res.messages,
+                                icon: 'success',
+                                timer: 2000
+                            }).then(function() {
+                                window.location.href = "{{ route('collection.index') }}";
+                            });
+                        },
 
-                                if(data.errors.name) {
-                                    $("#name_error").html(data.errors.name[0]);
-                                    $("#name").addClass("is-invalid");
-                                }
-
-                                if(data.errors.register_date) {
-                                    $("#register_date_error").html(data.errors.register_date[0]);
-                                    $("#register_date").addClass("is-invalid");
-                                }
-
-                                if(data.errors.image) {
-                                    $("#image_error").html(data.errors.image[0]);
-                                    $("#image").addClass("is-invalid");
-                                }
-                            }
-
-                            if(data.success) {
-                                $('#collectionForm')[0].reset();
-
-                                Swal.fire({
-                                    title: 'Sukses',
-                                    text: 'Collection Berhasil Diupdate',
-                                    icon: 'success',
-                                    timer: 2000
-                                }).then(function() {
-                                    window.location.href = "{{ route('collection.index') }}";
-                                });
-                            }
+                        error: function(reject) {
+                            setTimeout(function() {
+								$('#btnSave').text('Update');
+								var response = $.parseJSON(reject.responseText);
+								$.each(response.errors, function (key, val) {
+									$('#' + key + "_error").text(val[0]);
+									$('#' + key).addClass('is-invalid');
+								});
+							});
                         }
                     });
                 }

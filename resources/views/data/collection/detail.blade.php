@@ -43,6 +43,11 @@
                                 <td>{{ $collection->name }}</td>
                             </tr>
                             <tr>
+                                <th>Harga</th>
+                                <th>:</th>
+                                <td>@currency($collection->price)</td>
+                            </tr>
+                            <tr>
                                 <th>Tanggal Terdaftar</th>
                                 <th>:</th>
                                 <td>{{ \Carbon\Carbon::parse($collection->register_date)->isoFormat('D MMMM Y') }}</td>

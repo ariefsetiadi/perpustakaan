@@ -18,10 +18,10 @@ class OfficerController extends Controller
     {
         $data['title']  =   'Data Petugas';
 
-        if(request()->ajax()) {
+        if (request()->ajax()) {
             return datatables()->of(User::where('isAdmin', false)->orderBy('created_at', 'desc')->get())
                 ->addColumn('action', function($data) {
-                    if(Auth::user()->id != $data->id) {
+                    if (Auth::user()->id != $data->id) {
                         $button =  '<button type="button" id="'.$data->id.'" class="btnReset btn btn-success" title="Reset Password"><i class="fas fa-unlock"></i></button>';
                         $button .=   '<a href="' . route('officer.show', $data->id) . '" class="btn btn-info ml-2" title="Detail"><i class="fas fa-eye"></i></a>';
                         $button .=   '<a href="' . route('officer.edit', $data->id) . '" class="btn btn-warning mx-2" title="Edit"><i class="fas fa-pencil-alt"></i></a>';
@@ -52,9 +52,13 @@ class OfficerController extends Controller
             $image      =   $request->image;
             $image_name =   NULL;
 
-            if($image != NULL) {
-                $image_name =   'officers_' . $officer_id . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path($path), $image_name);
+            if ($image != NULL) {
+                if (!File::exists($path)) {
+                    File::makeDirectory($path, $mode = 0775, true, true);
+
+                    $image_name =   'officer_' . $officer_id . '.' . $image->getClientOriginalExtension();
+                    $image->move(public_path($path), $image_name);
+                }
             }
 
             $user                   =   new User;
@@ -104,7 +108,7 @@ class OfficerController extends Controller
     public function update(OfficerRequest $request)
     {
         try {
-            $officer    =   User::where('isAdmin', false)->findOrFail($id);
+            $officer    =   User::where('isAdmin', false)->findOrFail($request->off_id);
 
             $path       =   'uploads/officers';
             $image_name =   $officer->image;
@@ -112,23 +116,29 @@ class OfficerController extends Controller
             $officer_id =   strtoupper($request->officer_id);
             $image      =   $request->image;
 
-            if($image != NULL) {
-                File::delete('uploads/officers/' . $officer->image);
-    
-                $image_name =   'officers_' . $officer_id . '.' . $image->getClientOriginalExtension();
+            if ($image != NULL) {
+                if ($image_name != NULL) {
+                    File::delete('uploads/officers/' . $image_name);
+                }
+
+                if (!File::exists($path)) {
+                    File::makeDirectory($path, $mode = 0775, true, true);
+                }
+
+                $image_name =   'officer_' . $officer_id . '.' . $image->getClientOriginalExtension();
                 $image->move(public_path($path), $image_name);
             }
 
             $user   =   array(
-                'officer_id'        =>  $request->officer_id,
-                'fullname'          =>  ucwords(strtolower($request->fullname)),
-                'place_of_birth'    =>  ucwords(strtolower($request->place_of_birth)),
-                'date_of_birth'     =>  $request->date_of_birth,
-                'gender'            =>  $request->gender,
-                'address'           =>  $request->address,
-                'phone'             =>  $request->phone,
-                'image'             =>  $image_name,
-            );
+                            'officer_id'        =>  $request->officer_id,
+                            'fullname'          =>  ucwords(strtolower($request->fullname)),
+                            'place_of_birth'    =>  ucwords(strtolower($request->place_of_birth)),
+                            'date_of_birth'     =>  $request->date_of_birth,
+                            'gender'            =>  $request->gender,
+                            'address'           =>  $request->address,
+                            'phone'             =>  $request->phone,
+                            'image'             =>  $image_name,
+                        );
 
             User::whereId($request->off_id)->update($user);
             return response()->json(['messages' => 'Petugas Berhasil Diupdate']);
@@ -153,10 +163,10 @@ class OfficerController extends Controller
     {
         $data['title']  =   'Trash Petugas';
 
-        if(request()->ajax()) {
+        if (request()->ajax()) {
             return datatables()->of(User::onlyTrashed()->where('isAdmin', false)->orderBy('created_at', 'desc')->get())
                 ->addColumn('action', function($data) {
-                    if(Auth::user()->id != $data->id) {
+                    if (Auth::user()->id != $data->id) {
                         $button =  '<button type="button" id="'.$data->id.'" class="btnRestore btn btn-success" title="Pulihkan"><i class="fas fa-trash-restore"></i></button>';
 
                         return $button;

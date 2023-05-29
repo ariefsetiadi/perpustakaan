@@ -251,7 +251,7 @@
                         $('#btnYes').text('Menghapus...');
                     },
 
-                    success: function(data) {
+                    success: function(res) {
                         setTimeout(function() {
                             $('#confirmModal').modal('hide');
                             $('#collectionTable').DataTable().ajax.reload();
@@ -259,7 +259,7 @@
 
                         Swal.fire({
                             title: 'Sukses',
-                            text: 'Koleksi Berhasil Dihapus',
+                            text: res.messages,
                             icon: 'success',
                             timer: 2000
                         });

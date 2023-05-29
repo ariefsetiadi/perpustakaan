@@ -1,6 +1,7 @@
 /node_modules
-/public/hot
-/public/uploads/officers/*
+/public/uploads/officers
+/public/uploads/members
+/public/uploads/collections
 /public/storage
 /storage/*.key
 /vendor

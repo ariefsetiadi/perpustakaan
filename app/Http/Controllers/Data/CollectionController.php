@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Data;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\CollectionRequest;
 
 use File;
 use Validator;
@@ -42,55 +43,37 @@ class CollectionController extends Controller
         return view('data.collection.form', $data);
     }
 
-    public function store(Request $request)
+    public function store(CollectionRequest $request)
     {
-        $code       =   strtoupper($request->code);
-        $image      =   $request->image;
-        $image_name =   NULL;
+        try {
+            $code       =   strtoupper($request->code);
+            $path       =   'uploads/collections';
+            $image      =   $request->image;
+            $image_name =   NULL;
 
-        $validate   =   Validator::make($request->all(), [
-                            'category_id'   =>  'required|exists:categories,id',
-                            'code'          =>  'required|max:10|regex:/^[a-zA-Z0-9]*$/|unique:collections,code',
-                            'name'          =>  'required|max:255|unique:collections,name',
-                            'register_date' =>  'required|date',
-                            'image'         =>  'max:5120',
-                            'image.*'       =>  'mimes:jpg,jpeg,png',
-                        ],
-                        [
-                            'category_id.required'      =>  'Kategori wajib dipilih',
-                            'category_id.exists'        =>  'Kategori tidak ditemukan',
-                            'code.required'             =>  'ID Koleksi wajib diisi',
-                            'code.max'                  =>  'ID Koleksi maksimal 10 karakter',
-                            'code.regex'                =>  'ID Koleksi hanya boleh huruf dan angka',
-                            'code.unique'               =>  'ID Koleksi sudah digunakan',
-                            'name.required'             =>  'Nama Koleksi wajib diisi',
-                            'name.max'                  =>  'Nama Koleksi maksimal 255 karakter',
-                            'name.unique'               =>  'Nama Koleksi sudah digunakan',
-                            'register_date.required'    =>  'Tanggal Terdaftar wajib diisi',
-                            'register_date.date'        =>  'Tanggal Terdaftar tidak valid',
-                            'image.max'                 =>  'Foto maksimal 5 Mb',
-                            'image.mimes'               =>  'Foto hanya boleh format jpg, jpeg, atau png',
-                        ]);
+            if($image != NULL) {
+                if (!File::exists($path)) {
+                    File::makeDirectory($path, $mode = 0775, true, true);
 
-        if($validate->fails()) {
-            return response()->json(['errors' => $validate->errors()]);
+                    $image_name =   'collection_' . $code . '.' . $image->getClientOriginalExtension();
+                    $image->move(public_path($path), $image_name);
+                }
+            }
+
+            $collection                 =   new Collection;
+            $collection->category_id    =   $request->category_id;
+            $collection->code           =   $code;
+            $collection->name           =   $request->name;
+            $collection->price          =   $request->price;
+            $collection->register_date  =   $request->register_date;
+            $collection->description    =   $request->description;
+            $collection->image          =   $image_name;
+            $collection->save();
+
+            return response()->json(['messages' => 'Koleksi Berhasil Disimpan']);
+        } catch (\Throwable $th) {
+            return response()->json(['messages' => 'Koleksi Gagal Disimpan']);
         }
-
-        if($image != NULL) {
-            $image_name =   'collections_' . $code . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('/uploads/collections'), $image_name);
-        }
-
-        $collection                 =   new Collection;
-        $collection->category_id    =   $request->category_id;
-        $collection->code           =   $code;
-        $collection->name           =   ucwords(strtolower($request->name));
-        $collection->register_date  =   $request->register_date;
-        $collection->description    =   $request->description;
-        $collection->image          =   $image_name;
-        $collection->save();
-
-        return response()->json(['success' => 'Koleksi Berhasil Disimpan']);
     }
 
     public function editStock($id)
@@ -144,69 +127,52 @@ class CollectionController extends Controller
         return view('data.collection.form', $data);
     }
 
-    public function update(Request $request)
+    public function update(CollectionRequest $request)
     {
-        $collection =   Collection::findOrFail($request->collection_id);
-        $image_name =   $collection->image;
+        try {
+            $collection =   Collection::findOrFail($request->collection_id);
 
-        $code       =   strtoupper($request->code);
-        $image      =   $request->image;
+            $path       =   'uploads/collections';
+            $image_name =   $collection->image;
 
-        $validate   =   Validator::make($request->all(), [
-                            'category_id'   =>  'required|exists:categories,id',
-                            'code'          =>  'required|max:10|regex:/^[a-zA-Z0-9]*$/|unique:collections,code,' . $request->collection_id,
-                            'name'          =>  'required|max:255|unique:collections,name,' . $request->collection_id,
-                            'register_date' =>  'required|date',
-                            'image'         =>  'max:5120',
-                            'image.*'       =>  'mimes:jpg,jpeg,png',
-                        ],
-                        [
-                            'category_id.required'      =>  'Kategori wajib dipilih',
-                            'category_id.exists'        =>  'Kategori tidak ditemukan',
-                            'code.required'             =>  'ID Koleksi wajib diisi',
-                            'code.max'                  =>  'ID Koleksi maksimal 10 karakter',
-                            'code.regex'                =>  'ID Koleksi hanya boleh huruf dan angka',
-                            'code.unique'               =>  'ID Koleksi sudah digunakan',
-                            'name.required'             =>  'Nama Koleksi wajib diisi',
-                            'name.max'                  =>  'Nama Koleksi maksimal 255 karakter',
-                            'name.unique'               =>  'Nama Koleksi sudah digunakan',
-                            'register_date.required'    =>  'Tanggal Terdaftar wajib diisi',
-                            'register_date.date'        =>  'Tanggal Terdaftar tidak valid',
-                            'image.max'                 =>  'Foto maksimal 5 Mb',
-                            'image.mimes'               =>  'Foto hanya boleh format jpg, jpeg, atau png',
-                        ]);
+            $code       =   strtoupper($request->code);
+            $image      =   $request->image;
 
-        if($validate->fails()) {
-            return response()->json(['errors' => $validate->errors()]);
+            if($image != NULL) {
+                File::delete('uploads/collections/' . $collection->image);
+    
+                $image_name =   'collection_' . $code . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path($path), $image_name);
+            }
+    
+            $collection =   array(
+                                'category_id'    =>   $request->category_id,
+                                'code'           =>   $code,
+                                'name'           =>   $request->name,
+                                'price'          =>   $request->price,
+                                'register_date'  =>   $request->register_date,
+                                'description'    =>   $request->description,
+                                'image'          =>   $image_name,
+                            );
+    
+            Collection::whereId($request->collection_id)->update($collection);
+    
+            return response()->json(['messages' => 'Koleksi Berhasil Diupdate']);
+        } catch (\Throwable $th) {
+            return response()->json(['messages' => 'Koleksi Gagal Diupdate']);
         }
-
-        if($image != NULL) {
-            File::delete('uploads/collections/' . $collection->image);
-
-            $image_name =   'collections_' . $code . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('/uploads/collections'), $image_name);
-        }
-
-        $collection =   array(
-                            'category_id'    =>   $request->category_id,
-                            'code'           =>   $code,
-                            'name'           =>   ucwords(strtolower($request->name)),
-                            'register_date'  =>   $request->register_date,
-                            'description'    =>   $request->description,
-                            'image'          =>   $image_name,
-                        );
-
-        Collection::whereId($request->collection_id)->update($collection);
-
-        return response()->json(['success' => 'Koleksi Berhasil Diupdate']);
     }
 
     public function destroy($id)
     {
-        $collection =   Collection::findOrFail($id);
-        $collection->delete();
+        try {
+            $collection =   Collection::findOrFail($id);
+            $collection->delete();
 
-        return response()->json(['success' => 'Koleksi Berhasil Dihapus']);
+            return response()->json(['messages' => 'Koleksi Berhasil Dihapus']);
+        } catch (\Throwable $th) {
+            return response()->json(['messages' => 'Koleksi Gagal Dihapus']);
+        }
     }
 
     public function trash(Type $var = null)
@@ -227,9 +193,13 @@ class CollectionController extends Controller
 
     public function restore($id)
     {
-        $collection =   Collection::withTrashed()->findOrFail($id);
-        $collection->restore();
+        try {
+            $collection =   Collection::withTrashed()->findOrFail($id);
+            $collection->restore();
 
-        return response()->json(['success' => 'Koleksi Berhasil Dipulihkan']);
+            return response()->json(['messages' => 'Koleksi Berhasil Dipulihkan']);
+        } catch (\Throwable $th) {
+            return response()->json(['messages' => 'Koleksi Gagal Dipulihkan']);
+        }
     }
 }

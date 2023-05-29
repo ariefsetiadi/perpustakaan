@@ -131,7 +131,7 @@
                 e.preventDefault();
 
                 // Ajax Save Officer
-                if($('#btnSave').text() == 'Simpan') {
+                if ($('#btnSave').text() == 'Simpan') {
                     $('#officer_id_error').text();
                     $('#fullname_error').text();
                     $('#place_of_birth_error').text();
@@ -179,7 +179,7 @@
                 }
 
                 // Ajax Update Officer
-                if($('#btnSave').text() == 'Update') {
+                if ($('#btnSave').text() == 'Update') {
                     $('#officer_id_error').text();
                     $('#fullname_error').text();
                     $('#place_of_birth_error').text();

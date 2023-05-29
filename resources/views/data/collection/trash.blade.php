@@ -161,7 +161,7 @@
 
                         Swal.fire({
                             title: 'Sukses',
-                            text: 'Koleksi Berhasil Dipulihkan',
+                            text: data.messages,
                             icon: 'success',
                             timer: 2000
                         });

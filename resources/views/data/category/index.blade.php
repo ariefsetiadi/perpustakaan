@@ -185,8 +185,8 @@
 
                 // Ajax Save Category
                 if($('#btnSave').text() == 'Simpan') {
-                    $('#name_error').html();
-                    $('#description_error').html();
+                    $('#name_error').text();
+                    $('#description_error').text();
 
                     $.ajax({
                         url: "{{ route('category.store') }}",
@@ -197,39 +197,40 @@
                         processData: false,
                         dataType:"json",
 
-                        success: function(data) {
-                            if(data.errors) {
-                                if(data.errors.name) {
-                                    $("#name_error").html(data.errors.name[0]);
-                                    $("#name").addClass("is-invalid");
-                                }
+                        beforeSend: function() {
+                            $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Menyimpan...');
+                        },
 
-                                if(data.errors.description) {
-                                    $("#description_error").html(data.errors.description[0]);
-                                    $("#description").addClass("is-invalid");
-                                }
-                            }
+                        success: function(res) {
+                            $('#categoryForm')[0].reset();
+                            $('#formModal').modal('hide');
+                            $('#categoryTable').DataTable().ajax.reload();
 
-                            if(data.success) {
-                                $('#categoryForm')[0].reset();
-                                $('#formModal').modal('hide');
-                                $('#categoryTable').DataTable().ajax.reload();
+                            Swal.fire({
+                                title: 'Sukses',
+                                text: res.messages,
+                                icon: 'success',
+                                timer: 2000
+                            });
+                        },
 
-                                Swal.fire({
-                                    title: 'Sukses',
-                                    text: 'Kategori Berhasil Disimpan',
-                                    icon: 'success',
-                                    timer: 2000
+                        error: function(reject) {
+                            setTimeout(function() {
+                                $('#btnSave').text('Simpan');
+                                var response = $.parseJSON(reject.responseText);
+                                $.each(response.errors, function (key, val) {
+                                    $('#' + key + "_error").text(val[0]);
+                                    $('#' + key).addClass('is-invalid');
                                 });
-                            }
+                            });
                         }
                     });
                 }
 
                 // Ajax Update Category
                 if($('#btnSave').text() == 'Update') {
-                    $('#name_error').html();
-                    $('#description_error').html();
+                    $('#name_error').text();
+                    $('#description_error').text();
 
                     $.ajax({
                         url: "{{ route('category.update') }}",
@@ -240,31 +241,32 @@
                         processData: false,
                         dataType:"json",
 
-                        success: function(data) {
-                            if(data.errors) {
-                                if(data.errors.name) {
-                                    $("#name_error").html(data.errors.name[0]);
-                                    $("#name").addClass("is-invalid");
-                                }
+                        beforeSend: function() {
+                            $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Mengupdate...');
+                        },
 
-                                if(data.errors.description) {
-                                    $("#description_error").html(data.errors.description[0]);
-                                    $("#description").addClass("is-invalid");
-                                }
-                            }
+                        success: function(res) {
+                            $('#categoryForm')[0].reset();
+                            $('#formModal').modal('hide');
+                            $('#categoryTable').DataTable().ajax.reload();
 
-                            if(data.success) {
-                                $('#categoryForm')[0].reset();
-                                $('#formModal').modal('hide');
-                                $('#categoryTable').DataTable().ajax.reload();
+                            Swal.fire({
+                                title: 'Sukses',
+                                text: res.messages,
+                                icon: 'success',
+                                timer: 2000
+                            });
+                        },
 
-                                Swal.fire({
-                                    title: 'Sukses',
-                                    text: 'Kategori Berhasil Diupdate',
-                                    icon: 'success',
-                                    timer: 2000
+                        error: function(reject) {
+                            setTimeout(function() {
+                                $('#btnSave').text('Update');
+                                var response = $.parseJSON(reject.responseText);
+                                $.each(response.errors, function (key, val) {
+                                    $('#' + key + "_error").text(val[0]);
+                                    $('#' + key).addClass('is-invalid');
                                 });
-                            }
+                            });
                         }
                     });
                 }
@@ -296,7 +298,7 @@
 
                         Swal.fire({
                             title: 'Sukses',
-                            text: 'Kategori Berhasil Dihapus',
+                            text: res.messages,
                             icon: 'success',
                             timer: 2000
                         });

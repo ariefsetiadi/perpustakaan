@@ -4,8 +4,7 @@ namespace App\Http\Controllers\Data;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
-use Validator;
+use App\Http\Requests\CategoryRequest;
 
 use App\Models\Category;
 
@@ -33,30 +32,20 @@ class CategoryController extends Controller
         //
     }
 
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
-        $name   =   ucwords(strtolower($request->name));
+        try {
+            $name   =   ucwords(strtolower($request->name));
 
-        $validate   =   Validator::make($request->all(), [
-                            'name'          =>  'required|max:255|regex:/^[a-zA-Z0-9 ]*$/|unique:categories,name',
-                        ],
-                        [
-                            'name.required' =>  'Nama Kategori wajib diisi',
-                            'name.max'      =>  'Nama Kategori maksimal 255 karakter',
-                            'name.regex'    =>  'Nama Kategori hanya boleh huruf, angka dan spasi',
-                            'name.unique'   =>  'Nama Kategori sudah digunakan',
-                        ]);
+            $category               =   new Category;
+            $category->name         =   $name;
+            $category->description  =   $request->description;
+            $category->save();
 
-        if($validate->fails()) {
-            return response()->json(['errors' => $validate->errors()]);
+            return response()->json(['messages' => 'Kategori Berhasil Disimpan']);
+        } catch (\Throwable $th) {
+            return response()->json(['messages' => 'Kategori Gagal Disimpan']);
         }
-
-        $category               =   new Category;
-        $category->name         =   $name;
-        $category->description  =   $request->description;
-        $category->save();
-
-        return response()->json(['success' => 'Kategori Berhasil Disimpan']);
     }
 
     public function show($id)
@@ -67,44 +56,37 @@ class CategoryController extends Controller
     public function edit($id)
     {
         $category   =   Category::findOrFail($id);
-
         return response()->json(['data' => $category]);
     }
 
-    public function update(Request $request)
+    public function update(CategoryRequest $request)
     {
-        $name   =   ucwords(strtolower($request->name));
+        try {
+            $name   =   ucwords(strtolower($request->name));
 
-        $validate   =   Validator::make($request->all(), [
-                            'name'          =>  'required|max:255|regex:/^[a-zA-Z0-9 ]*$/|unique:categories,name,' . $request->category_id,
-                        ],
-                        [
-                            'name.required' =>  'Nama Kategori wajib diisi',
-                            'name.max'      =>  'Nama Kategori maksimal 255 karakter',
-                            'name.regex'    =>  'Nama Kategori hanya boleh huruf, angka dan spasi',
-                            'name.unique'   =>  'Nama Kategori sudah digunakan',
-                        ]);
+            $category   =   array(
+                                'name'          =>  $name,
+                                'description'   =>  $request->description,
+                            );
 
-        if($validate->fails()) {
-            return response()->json(['errors' => $validate->errors()]);
+            Category::whereId($request->category_id)->update($category);
+
+            return response()->json(['messages' => 'Kategori Berhasil Diupdate']);
+        } catch (\Throwable $th) {
+            return response()->json(['messages' => 'Kategori Gagal Diupdate']);
         }
-
-        $category   =   array(
-                            'name'          =>  $name,
-                            'description'   =>  $request->description,
-                        );
-
-        Category::whereId($request->category_id)->update($category);
-
-        return response()->json(['success' => 'Kategori Berhasil Disimpan']);
     }
 
     public function destroy($id)
     {
-        $category   =   Category::findOrFail($id);
-        $category->delete();
+        try {
+            $category   =   Category::findOrFail($id);
+            $category->delete();
 
-        return response()->json(['success' => 'Kategori Berhasil Dihapus']);
+            return response()->json(['messages' => 'Kategori Berhasil Dihapus']);
+        } catch (\Throwable $th) {
+            return response()->json(['messages' => 'Kategori Gagal Dihapus']);
+        }
     }
 
     public function trash()
@@ -125,9 +107,13 @@ class CategoryController extends Controller
 
     public function restore($id)
     {
-        $category   =   Category::withTrashed()->findOrFail($id);
-        $category->restore();
+        try {
+            $category   =   Category::withTrashed()->findOrFail($id);
+            $category->restore();
 
-        return response()->json(['success' => 'Kategori Berhasil Dipulihkan']);
+            return response()->json(['messages' => 'Kategori Berhasil Dipulihkan']);
+        } catch (\Throwable $th) {
+            return response()->json(['messages' => 'Kategori Gagal Dipulihkan']);
+        }
     }
 }

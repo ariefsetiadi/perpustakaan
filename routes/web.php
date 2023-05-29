@@ -83,20 +83,6 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/restore/{id}', [CollectionController::class, 'restore'])->name('collection.restore');
             });
         });
-
-        Route::prefix('transaction')->group(function () {
-            Route::prefix('loan')->group(function () {
-                Route::get('/', [LoanController::class, 'index'])->name('loan.index');
-                Route::get('/create', [LoanController::class, 'create'])->name('loan.create');
-                Route::post('/store', [LoanController::class, 'store'])->name('loan.store');
-                Route::get('/detail/{id}', [LoanController::class, 'show'])->name('loan.show');
-
-                // Cart
-                Route::get('/getCollection', [LoanController::class, 'getCollection'])->name('cart.getCollection');
-                Route::post('/cart/store', [LoanController::class, 'addCart'])->name('cart.store');
-                Route::get('/deleteCart/{id}', [LoanController::class, 'deleteCart'])->name('cart.deleteCart');
-            });
-        });
     });
 
     Route::prefix('data')->group(function () {
@@ -111,6 +97,20 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/trash', [MemberController::class, 'trash'])->name('member.trash');
             Route::get('/restore/{id}', [MemberController::class, 'restore'])->name('member.restore');
             Route::get('/print/{id}', [MemberController::class, 'print'])->name('member.print');
+        });
+    });
+
+    Route::prefix('transaction')->group(function () {
+        Route::prefix('loan')->group(function () {
+            Route::get('/', [LoanController::class, 'index'])->name('loan.index');
+            Route::get('/create', [LoanController::class, 'create'])->name('loan.create');
+            Route::post('/store', [LoanController::class, 'store'])->name('loan.store');
+            Route::get('/detail/{id}', [LoanController::class, 'show'])->name('loan.show');
+
+            // Cart
+            Route::get('/getCollection', [LoanController::class, 'getCollection'])->name('cart.getCollection');
+            Route::post('/cart/store', [LoanController::class, 'addCart'])->name('cart.store');
+            Route::get('/deleteCart/{id}', [LoanController::class, 'deleteCart'])->name('cart.deleteCart');
         });
     });
 });

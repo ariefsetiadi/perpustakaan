@@ -131,15 +131,15 @@
                 e.preventDefault();
 
                 // Ajax Save Member
-                if($('#btnSave').text() == 'Simpan') {
-                    $('#member_code_error').html();
-                    $('#fullname_error').html();
-                    $('#place_of_birth_error').html();
-                    $('#date_of_birth_error').html();
-                    $('#gender_error').html();
-                    $('#phone_error').html();
-                    $('#address_error').html();
-                    $('#image_error').html();
+                if ($('#btnSave').text() == 'Simpan') {
+                    $('#member_code_error').text();
+                    $('#fullname_error').text();
+                    $('#place_of_birth_error').text();
+                    $('#date_of_birth_error').text();
+                    $('#gender_error').text();
+                    $('#phone_error').text();
+                    $('#address_error').text();
+                    $('#image_error').text();
 
                     $.ajax({
                         url: "{{ route('member.store') }}",
@@ -150,75 +150,44 @@
                         processData: false,
                         dataType:"json",
 
-                        success: function(data) {
-                            if(data.errors) {
-                                if(data.errors.member_code) {
-                                    $("#member_code_error").html(data.errors.member_code[0]);
-                                    $("#member_code").addClass("is-invalid");
-                                }
+                        beforeSend: function() {
+							$('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Menyimpan...');
+						},
 
-                                if(data.errors.fullname) {
-                                    $("#fullname_error").html(data.errors.fullname[0]);
-                                    $("#fullname").addClass("is-invalid");
-                                }
+                        success: function(res) {
+                            Swal.fire({
+                                title: 'Sukses',
+                                text: res.messages,
+                                icon: 'success',
+                                timer: 2000
+                            }).then(function() {
+                                window.location.href = "{{ route('member.index') }}";
+                            });
+                        },
 
-                                if(data.errors.place_of_birth) {
-                                    $("#place_of_birth_error").html(data.errors.place_of_birth[0]);
-                                    $("#place_of_birth").addClass("is-invalid");
-                                }
-
-                                if(data.errors.date_of_birth) {
-                                    $("#date_of_birth_error").html(data.errors.date_of_birth[0]);
-                                    $("#date_of_birth").addClass("is-invalid");
-                                }
-
-                                if(data.errors.gender) {
-                                    $("#gender_error").html(data.errors.gender[0]);
-                                    $("#gender").addClass("is-invalid");
-                                }
-
-                                if(data.errors.phone) {
-                                    $("#phone_error").html(data.errors.phone[0]);
-                                    $("#phone").addClass("is-invalid");
-                                }
-
-                                if(data.errors.address) {
-                                    $("#address_error").html(data.errors.address[0]);
-                                    $("#address").addClass("is-invalid");
-                                }
-
-                                if(data.errors.image) {
-                                    $("#image_error").html(data.errors.image[0]);
-                                    $("#image").addClass("is-invalid");
-                                }
-                            }
-
-                            if(data.success) {
-                                $('#memberForm')[0].reset();
-
-                                Swal.fire({
-                                    title: 'Sukses',
-                                    text: 'Member Berhasil Disimpan',
-                                    icon: 'success',
-                                    timer: 2000
-                                }).then(function() {
-                                    window.location.href = "{{ route('member.index') }}";
-                                });
-                            }
+                        error: function(reject) {
+                            setTimeout(function() {
+								$('#btnSave').text('Simpan');
+								var response = $.parseJSON(reject.responseText);
+								$.each(response.errors, function (key, val) {
+									$('#' + key + "_error").text(val[0]);
+									$('#' + key).addClass('is-invalid');
+								});
+							});
                         }
                     });
                 }
 
                 // Ajax Update Member
-                if($('#btnSave').text() == 'Update') {
-                    $('#member_code_error').html();
-                    $('#fullname_error').html();
-                    $('#place_of_birth_error').html();
-                    $('#date_of_birth_error').html();
-                    $('#gender_error').html();
-                    $('#phone_error').html();
-                    $('#address_error').html();
-                    $('#image_error').html();
+                if ($('#btnSave').text() == 'Update') {
+                    $('#member_code_error').text();
+                    $('#fullname_error').text();
+                    $('#place_of_birth_error').text();
+                    $('#date_of_birth_error').text();
+                    $('#gender_error').text();
+                    $('#phone_error').text();
+                    $('#address_error').text();
+                    $('#image_error').text();
 
                     $.ajax({
                         url: "{{ route('member.update') }}",
@@ -229,61 +198,30 @@
                         processData: false,
                         dataType:"json",
 
-                        success: function(data) {
-                            if(data.errors) {
-                                if(data.errors.member_code) {
-                                    $("#member_code_error").html(data.errors.member_code[0]);
-                                    $("#member_code").addClass("is-invalid");
-                                }
+                        beforeSend: function() {
+							$('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Mengupdate...');
+						},
 
-                                if(data.errors.fullname) {
-                                    $("#fullname_error").html(data.errors.fullname[0]);
-                                    $("#fullname").addClass("is-invalid");
-                                }
+                        success: function(res) {
+                            Swal.fire({
+                                title: 'Sukses',
+                                text: res.messages,
+                                icon: 'success',
+                                timer: 2000
+                            }).then(function() {
+                                window.location.href = "{{ route('member.index') }}";
+                            });
+                        },
 
-                                if(data.errors.place_of_birth) {
-                                    $("#place_of_birth_error").html(data.errors.place_of_birth[0]);
-                                    $("#place_of_birth").addClass("is-invalid");
-                                }
-
-                                if(data.errors.date_of_birth) {
-                                    $("#date_of_birth_error").html(data.errors.date_of_birth[0]);
-                                    $("#date_of_birth").addClass("is-invalid");
-                                }
-
-                                if(data.errors.gender) {
-                                    $("#gender_error").html(data.errors.gender[0]);
-                                    $("#gender").addClass("is-invalid");
-                                }
-
-                                if(data.errors.phone) {
-                                    $("#phone_error").html(data.errors.phone[0]);
-                                    $("#phone").addClass("is-invalid");
-                                }
-
-                                if(data.errors.address) {
-                                    $("#address_error").html(data.errors.address[0]);
-                                    $("#address").addClass("is-invalid");
-                                }
-
-                                if(data.errors.image) {
-                                    $("#image_error").html(data.errors.image[0]);
-                                    $("#image").addClass("is-invalid");
-                                }
-                            }
-
-                            if(data.success) {
-                                $('#memberForm')[0].reset();
-
-                                Swal.fire({
-                                    title: 'Sukses',
-                                    text: 'Member Berhasil Diupdate',
-                                    icon: 'success',
-                                    timer: 2000
-                                }).then(function() {
-                                    window.location.href = "{{ route('member.index') }}";
-                                });
-                            }
+                        error: function(reject) {
+                            setTimeout(function() {
+								$('#btnSave').text('Update');
+								var response = $.parseJSON(reject.responseText);
+								$.each(response.errors, function (key, val) {
+									$('#' + key + "_error").text(val[0]);
+									$('#' + key).addClass('is-invalid');
+								});
+							});
                         }
                     });
                 }

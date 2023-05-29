@@ -61,7 +61,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-success">Update</button>
+                            <button type="submit" class="btn btn-success" id="btnSave"></button>
                         </div>
                     </form>
                 </div>
@@ -137,6 +137,7 @@
                     dataType: "json",
                     success: function(html) {
                         $('.modal-title').text("Edit Denda");
+                        $('#btnSave').text("Update");
                         $('#penaltyForm').trigger("reset");
                         $('#formModal').modal("show");
 
@@ -151,8 +152,8 @@
             $('#penaltyForm').on('submit', function(event) {
                 event.preventDefault();
 
-                $("#name_error").html("");
-                $("#value_error").html("");
+                $("#name_error").text("");
+                $("#value_error").text("");
 
                 $.ajax({
                     url: "{{ route('penalty.update') }}",
@@ -163,31 +164,32 @@
                     processData: false,
                     dataType:"json",
 
-                    success: function(data) {
-                        if(data.errors) {
-                            if(data.errors.name) {
-                                $("#name_error").html(data.errors.name[0]);
-                                $("#name").addClass("is-invalid");
-                            }
+                    beforeSend: function() {
+                        $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Mengupdate...');
+                    },
 
-                            if(data.errors.value) {
-                                $("#value_error").html(data.errors.value[0]);
-                                $("#value").addClass("is-invalid");
-                            }
-                        }
+                    success: function(res) {
+                        $('#penaltyForm')[0].reset();
+                        $('#formModal').modal('hide');
+                        $('#penaltyTable').DataTable().ajax.reload();
 
-                        if(data.success) {
-                            $('#penaltyForm')[0].reset();
-                            $('#formModal').modal('hide');
-                            $('#penaltyTable').DataTable().ajax.reload();
+                        Swal.fire({
+                            title: 'Sukses',
+                            text: res.messages,
+                            icon: 'success',
+                            timer: 2000
+                        });
+                    },
 
-                            Swal.fire({
-                                title: 'Sukses',
-                                text: 'Denda Berhasil Diupdate',
-                                icon: 'success',
-                                timer: 2000
+                    error: function(reject) {
+                        setTimeout(function() {
+                            $('#btnSave').text('Update');
+                            var response = $.parseJSON(reject.responseText);
+                            $.each(response.errors, function (key, val) {
+                                $('#' + key + "_error").text(val[0]);
+                                $('#' + key).addClass('is-invalid');
                             });
-                        }
+                        });
                     }
                 });
             });
