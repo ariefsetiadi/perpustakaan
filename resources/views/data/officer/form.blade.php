@@ -92,14 +92,12 @@
 
                             <div class="col-lg-6 col-md-12">
                                 <div class="form-group">
-                                    <label>Foto</label>
-                                    <div class="input-group">
-                                        <div class="custom-file">
-                                            <input type="file" class="custom-file-input" name="image" id="thumbnailFile" accept="image/jpg,image/jpeg,image/png">
-                                            <label class="custom-file-label" for="thumbnailFile">{{ $officer ? ($officer->image ? $officer->image : 'Pilih File...') : 'Pilih File...' }}</label>
-                                        </div>
-                                    </div>
-                                    <span class="text-danger" id="image_error"></span>
+                                    <label>Status</label>
+                                    <select name="status" id="status" class="form-control">
+                                        <option value="1" {{ $officer ? ($officer->status == '1' ? 'selected' : '') : '' }}>Aktif</option>
+                                        <option value="0" {{ $officer ? ($officer->status == '0' ? 'selected' : '') : '' }}>Nonaktif</option>
+                                    </select>
+                                    <span class="text-danger" id="status_error"></span>
                                 </div>
                             </div>
                         </div>
@@ -139,7 +137,7 @@
                     $('#gender_error').text();
                     $('#phone_error').text();
                     $('#address_error').text();
-                    $('#image_error').text();
+                    $('#status_error').text();
 
                     $.ajax({
                         url: "{{ route('officer.store') }}",
@@ -187,7 +185,7 @@
                     $('#gender_error').text();
                     $('#phone_error').text();
                     $('#address_error').text();
-                    $('#image_error').text();
+                    $('#status_error').text();
 
                     $.ajax({
                         url: "{{ route('officer.update') }}",

@@ -19,15 +19,22 @@ class CollectionController extends Controller
         $data['title']  =   'Data Koleksi';
 
         if(request()->ajax()) {
-            return datatables()->of(Collection::with(['category'])->orderBy('created_at', 'desc')->get())
+            return datatables()->of(Collection::orderBy('created_at', 'desc')->get())
                 ->addColumn('action', function($data) {
                     $button =   '<button type="button" id="'.$data->id.'" class="btnStock btn btn-success" title="Edit Stok"><i class="fas fa-boxes"></i></button>';
                     $button .=   '<a href="' . route('collection.show', $data->id) . '" class="btn btn-info ml-2" title="Detail"><i class="fas fa-eye"></i></a>';
                     $button .=   '<a href="' . route('collection.edit', $data->id) . '" class="btn btn-warning mx-2" title="Edit"><i class="fas fa-pencil-alt"></i></a>';
-                    $button .=  '<button type="button" id="'.$data->id.'" class="btnDelete btn btn-danger" title="Hapus"><i class="fas fa-eraser"></i></button>';
 
                     return $button;
-                })->rawColumns(['action'])->addIndexColumn()->make(true);
+                })->editColumn('status', function($data) {
+                    if ($data->status == TRUE) {
+                        $status =  '<h5><span class="badge badge-success">AKTIF</span></h5>';
+                    } else {
+                        $status =  '<h5><span class="badge badge-danger">NONAKTIF</span></h5>';
+                    }
+
+                    return $status;
+                })->rawColumns(['action', 'status'])->addIndexColumn()->make(true);
         }
 
         return view('data.collection.index', $data);
@@ -49,16 +56,13 @@ class CollectionController extends Controller
             $code       =   strtoupper($request->code);
             $path       =   'uploads/collections';
             $image      =   $request->image;
-            $image_name =   NULL;
 
-            if($image != NULL) {
-                if (!File::exists($path)) {
-                    File::makeDirectory($path, $mode = 0775, true, true);
-
-                    $image_name =   'collection_' . $code . '.' . $image->getClientOriginalExtension();
-                    $image->move(public_path($path), $image_name);
-                }
+            if (!File::exists($path)) {
+                File::makeDirectory($path, $mode = 0775, true, true);
             }
+
+            $image_name =   'collection_' . $code . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path($path), $image_name);
 
             $collection                 =   new Collection;
             $collection->category_id    =   $request->category_id;
@@ -68,6 +72,7 @@ class CollectionController extends Controller
             $collection->register_date  =   $request->register_date;
             $collection->description    =   $request->description;
             $collection->image          =   $image_name;
+            $collection->status         =   $request->status;
             $collection->save();
 
             return response()->json(['messages' => 'Koleksi Berhasil Disimpan']);
@@ -146,13 +151,14 @@ class CollectionController extends Controller
             }
     
             $collection =   array(
-                                'category_id'    =>   $request->category_id,
-                                'code'           =>   $code,
-                                'name'           =>   $request->name,
-                                'price'          =>   $request->price,
-                                'register_date'  =>   $request->register_date,
-                                'description'    =>   $request->description,
-                                'image'          =>   $image_name,
+                                'category_id'   =>   $request->category_id,
+                                'code'          =>   $code,
+                                'name'          =>   $request->name,
+                                'price'         =>   $request->price,
+                                'register_date' =>   $request->register_date,
+                                'description'   =>   $request->description,
+                                'image'         =>   $image_name,
+                                'status'        =>   $request->status,
                             );
     
             Collection::whereId($request->collection_id)->update($collection);
@@ -160,46 +166,6 @@ class CollectionController extends Controller
             return response()->json(['messages' => 'Koleksi Berhasil Diupdate']);
         } catch (\Throwable $th) {
             return response()->json(['messages' => 'Koleksi Gagal Diupdate']);
-        }
-    }
-
-    public function destroy($id)
-    {
-        try {
-            $collection =   Collection::findOrFail($id);
-            $collection->delete();
-
-            return response()->json(['messages' => 'Koleksi Berhasil Dihapus']);
-        } catch (\Throwable $th) {
-            return response()->json(['messages' => 'Koleksi Gagal Dihapus']);
-        }
-    }
-
-    public function trash(Type $var = null)
-    {
-        $data['title']  =   'Trash Koleksi';
-
-        if(request()->ajax()) {
-            return datatables()->of(Collection::with(['category'])->onlyTrashed()->orderBy('created_at', 'desc')->get())
-                ->addColumn('action', function($data) {
-                    $button =  '<button type="button" id="'.$data->id.'" class="btnRestore btn btn-success" title="Pulihkan"><i class="fas fa-trash-restore"></i></button>';
-
-                    return $button;
-                })->rawColumns(['action'])->addIndexColumn()->make(true);
-        }
-
-        return view('data.collection.trash', $data);
-    }
-
-    public function restore($id)
-    {
-        try {
-            $collection =   Collection::withTrashed()->findOrFail($id);
-            $collection->restore();
-
-            return response()->json(['messages' => 'Koleksi Berhasil Dipulihkan']);
-        } catch (\Throwable $th) {
-            return response()->json(['messages' => 'Koleksi Gagal Dipulihkan']);
         }
     }
 }

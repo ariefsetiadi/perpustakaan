@@ -16,7 +16,6 @@
         <div class="card shadow mb-4">
             <div class="card-header py-3">
                 <a href="{{ route('collection.create') }}" class="btn btn-primary" title="Tambah"><i class="fas fa-plus"></i></a>
-                <a href="{{ route('collection.trash') }}" class="btn btn-danger" title="Trash"><i class="fas fa-trash"></i></a>
             </div>
 
             <div class="card-body">
@@ -27,8 +26,8 @@
                                 <th>No.</th>
                                 <th>ID Koleksi</th>
                                 <th>Nama Koleksi</th>
-                                <th>Kategori</th>
                                 <th>Stok</th>
+                                <th>Status</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -133,12 +132,13 @@
                         name: 'name'
                     },
                     {
-                        data: 'category.name',
-                        name: 'category.name'
-                    },
-                    {
                         data: 'stock',
                         name: 'stock'
+                    },
+                    {
+                        data: 'status',
+                        name: 'status',
+                        searchable: false
                     },
                     {
                         data: 'action',
@@ -160,6 +160,7 @@
                     {
                         targets: 3,
                         className: 'text-center',
+                        width: '10%'
                     },
                     {
                         targets: 4,
@@ -169,7 +170,7 @@
                     {
                         targets: 5,
                         className: 'text-center',
-                        width: '25%'
+                        width: '20%'
                     }
                 ]
             });
@@ -229,40 +230,6 @@
                                 timer: 2000
                             });
                         }
-                    }
-                });
-            });
-
-            // Ajax Display Confirmation Delete Modal
-            var url     =   '{{ route("collection.delete", ":id") }}';
-
-            $(document).on('click', '.btnDelete', function() {
-                collection_id  =   $(this).attr('id');
-                $('#btnNo').text("Batal");
-                $('#btnYes').text("Ya, Hapus");
-                $('#confirmModal').modal("show");
-            });
-
-            // Ajax Delete Data
-            $('#btnYes').click(function() {
-                $.ajax({
-                    url: url.replace(":id", collection_id),
-                    beforeSend: function() {
-                        $('#btnYes').text('Menghapus...');
-                    },
-
-                    success: function(res) {
-                        setTimeout(function() {
-                            $('#confirmModal').modal('hide');
-                            $('#collectionTable').DataTable().ajax.reload();
-                        });
-
-                        Swal.fire({
-                            title: 'Sukses',
-                            text: res.messages,
-                            icon: 'success',
-                            timer: 2000
-                        });
                     }
                 });
             });

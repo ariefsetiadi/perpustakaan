@@ -54,6 +54,15 @@
                                 <th>:</th>
                                 <td>{{ $member->phone }}</td>
                             </tr>
+                            <tr>
+                                <th>Status</th>
+                                <th>:</th>
+                                @if ($member->status == true)
+                                    <td><h5><span class="badge badge-success">AKTIF</span></h5></td>
+                                @else
+                                    <td><h5><span class="badge badge-danger">NONAKTIF</span></h5></td>
+                                @endif
+                            </tr>
                         </table>
                     </div>
                 </div>

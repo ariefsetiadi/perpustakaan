@@ -31,7 +31,7 @@ class OfficerRequest extends FormRequest
             'gender'            =>  'required|in:Laki-Laki,Perempuan',
             'address'           =>  'required',
             'phone'             =>  'required|digits_between:10,15|unique:users,phone,' . $this->off_id,
-            'image'             =>  'max:5120|mimes:jpg,jpeg,png'
+            'status'            =>  'required|in:0,1',
         ];
     }
 
@@ -55,8 +55,8 @@ class OfficerRequest extends FormRequest
             'phone.required'            =>  'Telepon wajib diisi',
             'phone.digits_between'      =>  'Telepon 10 - 15 angka',
             'phone.unique'              =>  'Telepon sudah digunakan',
-            'image.max'                 =>  'Foto maksimal 5 Mb',
-            'image.mimes'               =>  'Foto hanya boleh format jpg, jpeg, atau png'
+            'status.required'           =>  'Status wajib dipilih',
+            'status.in'                 =>  'Status tidak valid',
         ];
     }
 }

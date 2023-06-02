@@ -59,7 +59,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-lg-6 col-md-12">
+                            <div class="col-lg-4 col-md-12">
                                 <div class="form-group">
                                     <label>Harga</label>
                                     <input type="number" name="price" id="price" class="form-control" placeholder="Harga" value="{{ $collection ? $collection->price : '' }}">
@@ -67,11 +67,24 @@
                                 </div>
                             </div>
 
-                            <div class="col-lg-6 col-md-12">
+                            <div class="col-lg-4 col-md-12">
                                 <div class="form-group">
                                     <label>Tanggal Terdaftar</label>
                                     <input type="date" name="register_date" id="register_date" class="form-control" placeholder="Tanggal Terdaftar" value="{{ $collection ? $collection->register_date : '' }}">
                                     <span class="text-danger" id="register_date_error"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 col-md-12">
+                                <div class="form-group">
+                                    <label>Foto</label>
+                                    <div class="input-group">
+                                        <div class="custom-file">
+                                            <input type="file" class="custom-file-input" name="image" id="thumbnailFile" accept="image/jpg,image/jpeg,image/png">
+                                            <label class="custom-file-label" for="thumbnailFile">{{ $collection ? ($collection->image ? $collection->image : 'Pilih File...') : 'Pilih File...' }}</label>
+                                        </div>
+                                    </div>
+                                    <span class="text-danger" id="image_error"></span>
                                 </div>
                             </div>
                         </div>
@@ -86,14 +99,12 @@
 
                             <div class="col-lg-6 col-md-12">
                                 <div class="form-group">
-                                    <label>Foto</label>
-                                    <div class="input-group">
-                                        <div class="custom-file">
-                                            <input type="file" class="custom-file-input" name="image" id="thumbnailFile" accept="image/jpg,image/jpeg,image/png">
-                                            <label class="custom-file-label" for="thumbnailFile">{{ $collection ? ($collection->image ? $collection->image : 'Pilih File...') : 'Pilih File...' }}</label>
-                                        </div>
-                                    </div>
-                                    <span class="text-danger" id="image_error"></span>
+                                    <label>Status</label>
+                                    <select name="status" id="status" class="form-control">
+                                        <option value="1" {{ $collection ? ($collection->status == '1' ? 'selected' : '') : '' }}>Aktif</option>
+                                        <option value="0" {{ $collection ? ($collection->status == '0' ? 'selected' : '') : '' }}>Nonaktif</option>
+                                    </select>
+                                    <span class="text-danger" id="status_error"></span>
                                 </div>
                             </div>
                         </div>
@@ -133,6 +144,7 @@
                     $('#price_error').text();
                     $('#register_date_error').text();
                     $('#image_error').text();
+                    $('#status_error').text();
 
                     $.ajax({
                         url: "{{ route('collection.store') }}",
@@ -179,6 +191,7 @@
                     $('#price_error').text();
                     $('#register_date_error').text();
                     $('#image_error').text();
+                    $('#status_error').text();
 
                     $.ajax({
                         url: "{{ route('collection.update') }}",

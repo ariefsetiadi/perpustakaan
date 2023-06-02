@@ -20,7 +20,15 @@ class PenaltyController extends Controller
                     $button =  '<button type="button" id="'.$data->id.'" class="btnEdit btn btn-warning" title="Edit"><i class="fas fa-pencil-alt"></i></button>';
 
                     return $button;
-                })->rawColumns(['action'])->addIndexColumn()->make(true);
+                })->editColumn('status', function($data) {
+                    if ($data->status == TRUE) {
+                        $status =  '<h5><span class="badge badge-success">AKTIF</span></h5>';
+                    } else {
+                        $status =  '<h5><span class="badge badge-danger">NONAKTIF</span></h5>';
+                    }
+
+                    return $status;
+                })->rawColumns(['action', 'status'])->addIndexColumn()->make(true);
         }
 
         return view('data.penalty.index', $data);
@@ -31,9 +39,19 @@ class PenaltyController extends Controller
         //
     }
 
-    public function store(Request $request)
+    public function store(PenaltyRequest $request)
     {
-        //
+        try {
+            $penalty            =   new Penalty;
+            $penalty->name      =   ucwords(strtolower($request->name));
+            $penalty->value     =   $request->value;
+            $penalty->status    =   $request->status;
+            $penalty->save();
+
+            return response()->json(['messages' => 'Denda Berhasil Disimpan']);
+        } catch (\Throwable $th) {
+            return response()->json(['messages' => 'Denda Gagal Disimpan']);
+        }
     }
 
     public function show($id)
@@ -53,8 +71,9 @@ class PenaltyController extends Controller
             $name   =   ucwords(strtolower($request->name));
 
             $penalty    =   array(
-                                'name'  =>  $name,
-                                'value' =>  $request->value,
+                                'name'      =>  $name,
+                                'value'     =>  $request->value,
+                                'status'    =>  $request->status,
                             );
 
             Penalty::whereId($request->penalty_id)->update($penalty);

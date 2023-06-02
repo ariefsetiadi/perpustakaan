@@ -20,18 +20,21 @@ class PenaltiesSeeder extends Seeder
             [
                 'name'          =>  'Terlambat',
                 'value'         =>  '5',
+                'status'        =>  TRUE,
                 'created_at'    =>  Carbon::now()->format('Y-m-d H:i:s'),
                 'updated_at'    =>  Carbon::now()->format('Y-m-d H:i:s'),
             ],
             [
                 'name'          =>  'Rusak',
                 'value'         =>  '50',
+                'status'        =>  TRUE,
                 'created_at'    =>  Carbon::now()->format('Y-m-d H:i:s'),
                 'updated_at'    =>  Carbon::now()->format('Y-m-d H:i:s'),
             ],
             [
                 'name'          =>  'Hilang',
                 'value'         =>  '100',
+                'status'        =>  TRUE,
                 'created_at'    =>  Carbon::now()->format('Y-m-d H:i:s'),
                 'updated_at'    =>  Carbon::now()->format('Y-m-d H:i:s'),
             ],

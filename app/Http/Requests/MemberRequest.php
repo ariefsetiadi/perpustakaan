@@ -32,7 +32,8 @@ class MemberRequest extends FormRequest
             'address'           =>  'required',
             'phone'             =>  'required|digits_between:10,15|unique:members,phone,' . $this->member_id,
             'image'             =>  'required_without:member_id|max:5120',
-            'image.*'           =>  'mimes:jpg,jpeg,png'
+            'image.*'           =>  'mimes:jpg,jpeg,png',
+            'status'            =>  'required|in:0,1',
         ];
     }
 
@@ -58,7 +59,9 @@ class MemberRequest extends FormRequest
             'phone.unique'              =>  'Telepon sudah digunakan',
             'image.required_without'    =>  'Foto wajib diupload',
             'image.max'                 =>  'Foto maksimal 5 Mb',
-            'image.mimes'               =>  'Foto hanya boleh format jpg, jpeg, atau png'
+            'image.mimes'               =>  'Foto hanya boleh format jpg, jpeg, atau png',
+            'status.required'           =>  'Status wajib dipilih',
+            'status.in'                 =>  'Status tidak valid',
         ];
     }
 }

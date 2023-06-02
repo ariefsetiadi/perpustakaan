@@ -16,7 +16,6 @@
         <div class="card shadow mb-4">
             <div class="card-header py-3">
                 <button class="btn btn-primary" id="btnAdd" title="Tambah"><i class="fas fa-plus"></i></button>
-                <a href="{{ route('category.trash') }}" class="btn btn-danger" title="Trash"><i class="fas fa-trash"></i></a>
             </div>
 
             <div class="card-body">
@@ -27,6 +26,7 @@
                                 <th>No.</th>
                                 <th>Nama Kategori</th>
                                 <th>Deskripsi</th>
+                                <th>Status</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -66,27 +66,20 @@
                                 <textarea name="description" id="description" class="form-control" rows="5" placeholder="Deskripsi"></textarea>
                                 <span class="text-danger" id="description_error"></span>
                             </div>
+
+                            <div class="form-group">
+                                <label>Status</label>
+                                    <select name="status" id="status" class="form-control">
+                                        <option value="1">Aktif</option>
+                                        <option value="0">Nonaktif</option>
+                                    </select>
+                                <span class="text-danger" id="status_error"></span>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-success" id="btnSave"></button>
                         </div>
                     </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- Delete Confirmation -->
-        <div class="modal fade" data-backdrop="static" data-keyboard="false" id="confirmModal" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <div class="text-center my-3">
-                            <img src="{{ asset('assets/img/confirm-delete.svg') }}">
-                            <h5 class="my-3" style="color: #1f1f1f">Anda Yakin Ingin Menghapus Kategori Ini?</h5>
-                            <button type="button" class="btn btn-secondary mr-1" id="btnNo" data-dismiss="modal"></button>
-                            <button type="submit" class="btn btn-danger ml-1" id="btnYes"></button>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -130,6 +123,11 @@
                         name: 'description'
                     },
                     {
+                        data: 'status',
+                        name: 'status',
+                        searchable: false
+                    },
+                    {
                         data: 'action',
                         name: 'action',
                         orderable: false,
@@ -145,7 +143,12 @@
                     {
                         targets: 3,
                         className: 'text-center',
-                        width: '15%'
+                        width: '10%'
+                    },
+                    {
+                        targets: 4,
+                        className: 'text-center',
+                        width: '20%'
                     }
                 ]
             });
@@ -175,6 +178,7 @@
                         $('#category_id').val(html.data.id);
                         $('#name').val(html.data.name);
                         $('#description').val(html.data.description);
+                        $('#status').val(html.data.status);
                     }
                 });
             });
@@ -187,6 +191,7 @@
                 if($('#btnSave').text() == 'Simpan') {
                     $('#name_error').text();
                     $('#description_error').text();
+                    $('#status_error').text();
 
                     $.ajax({
                         url: "{{ route('category.store') }}",
@@ -231,6 +236,7 @@
                 if($('#btnSave').text() == 'Update') {
                     $('#name_error').text();
                     $('#description_error').text();
+                    $('#status_error').text();
 
                     $.ajax({
                         url: "{{ route('category.update') }}",
@@ -270,40 +276,6 @@
                         }
                     });
                 }
-            });
-
-            // Ajax Display Confirmation Delete Modal
-            var url     =   '{{ route("category.delete", ":id") }}';
-
-            $(document).on('click', '.btnDelete', function() {
-                category_id  =   $(this).attr('id');
-                $('#btnNo').text("Batal");
-                $('#btnYes').text("Ya, Hapus");
-                $('#confirmModal').modal("show");
-            });
-
-            // Ajax Delete Data
-            $('#btnYes').click(function() {
-                $.ajax({
-                    url: url.replace(":id", category_id),
-                    beforeSend: function() {
-                        $('#btnYes').text('Menghapus...');
-                    },
-
-                    success: function(data) {
-                        setTimeout(function() {
-                            $('#confirmModal').modal('hide');
-                            $('#categoryTable').DataTable().ajax.reload();
-                        });
-
-                        Swal.fire({
-                            title: 'Sukses',
-                            text: res.messages,
-                            icon: 'success',
-                            timer: 2000
-                        });
-                    }
-                });
             });
         });
     </script>

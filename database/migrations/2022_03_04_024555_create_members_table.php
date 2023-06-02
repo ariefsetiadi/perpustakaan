@@ -23,8 +23,8 @@ class CreateMembersTable extends Migration
             $table->string('address');
             $table->string('phone', 15)->unique();
             $table->string('image');
+            $table->boolean('status')->default(1);
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

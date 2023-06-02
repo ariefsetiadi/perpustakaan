@@ -17,6 +17,7 @@ class CreatePenaltiesTable extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->integer('value');
+            $table->boolean('status')->default(1);
             $table->timestamps();
         });
     }

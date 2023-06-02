@@ -25,11 +25,18 @@ class OfficerController extends Controller
                         $button =  '<button type="button" id="'.$data->id.'" class="btnReset btn btn-success" title="Reset Password"><i class="fas fa-unlock"></i></button>';
                         $button .=   '<a href="' . route('officer.show', $data->id) . '" class="btn btn-info ml-2" title="Detail"><i class="fas fa-eye"></i></a>';
                         $button .=   '<a href="' . route('officer.edit', $data->id) . '" class="btn btn-warning mx-2" title="Edit"><i class="fas fa-pencil-alt"></i></a>';
-                        $button .=  '<button type="button" id="'.$data->id.'" class="btnDelete btn btn-danger" title="Hapus"><i class="fas fa-eraser"></i></button>';
 
                         return $button;
                     }
-                })->rawColumns(['action'])->addIndexColumn()->make(true);
+                })->editColumn('status', function($data) {
+                    if ($data->status == TRUE) {
+                        $status =  '<h5><span class="badge badge-success">AKTIF</span></h5>';
+                    } else {
+                        $status =  '<h5><span class="badge badge-danger">NONAKTIF</span></h5>';
+                    }
+
+                    return $status;
+                })->rawColumns(['action', 'status'])->addIndexColumn()->make(true);
         }
 
         return view('data.officer.index', $data);
@@ -48,29 +55,17 @@ class OfficerController extends Controller
     {
         try {
             $officer_id =   strtoupper($request->officer_id);
-            $path       =   'uploads/officers';
-            $image      =   $request->image;
-            $image_name =   NULL;
-
-            if ($image != NULL) {
-                if (!File::exists($path)) {
-                    File::makeDirectory($path, $mode = 0775, true, true);
-
-                    $image_name =   'officer_' . $officer_id . '.' . $image->getClientOriginalExtension();
-                    $image->move(public_path($path), $image_name);
-                }
-            }
 
             $user                   =   new User;
             $user->officer_id       =   $officer_id;
             $user->fullname         =   ucwords(strtolower($request->fullname));
-            $user->isAdmin          =   false;
             $user->place_of_birth   =   ucwords(strtolower($request->place_of_birth));
             $user->date_of_birth    =   $request->date_of_birth;
             $user->gender           =   $request->gender;
             $user->address          =   $request->address;
             $user->phone            =   $request->phone;
-            $user->image            =   $image_name;
+            $user->isAdmin          =   false;
+            $user->status           =   $request->status;
             $user->password         =   Hash::make($officer_id);
             $user->save();
 
@@ -110,25 +105,6 @@ class OfficerController extends Controller
         try {
             $officer    =   User::where('isAdmin', false)->findOrFail($request->off_id);
 
-            $path       =   'uploads/officers';
-            $image_name =   $officer->image;
-
-            $officer_id =   strtoupper($request->officer_id);
-            $image      =   $request->image;
-
-            if ($image != NULL) {
-                if ($image_name != NULL) {
-                    File::delete('uploads/officers/' . $image_name);
-                }
-
-                if (!File::exists($path)) {
-                    File::makeDirectory($path, $mode = 0775, true, true);
-                }
-
-                $image_name =   'officer_' . $officer_id . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path($path), $image_name);
-            }
-
             $user   =   array(
                             'officer_id'        =>  $request->officer_id,
                             'fullname'          =>  ucwords(strtolower($request->fullname)),
@@ -137,55 +113,13 @@ class OfficerController extends Controller
                             'gender'            =>  $request->gender,
                             'address'           =>  $request->address,
                             'phone'             =>  $request->phone,
-                            'image'             =>  $image_name,
+                            'status'            =>  $request->status,
                         );
 
             User::whereId($request->off_id)->update($user);
             return response()->json(['messages' => 'Petugas Berhasil Diupdate']);
         } catch (\Throwable $th) {
             return response()->json(['messages' => 'Petugas Gagal Diupdate']);
-        }
-    }
-
-    public function destroy($id)
-    {
-        try {
-            $officer    =   User::findOrFail($id);
-            $officer->delete();
-
-            return response()->json(['messages' => 'Petugas Berhasil Dihapus']);
-        } catch (\Throwable $th) {
-            return response()->json(['messages' => 'Petugas Gagal Dihapus']);
-        }
-    }
-
-    public function trash()
-    {
-        $data['title']  =   'Trash Petugas';
-
-        if (request()->ajax()) {
-            return datatables()->of(User::onlyTrashed()->where('isAdmin', false)->orderBy('created_at', 'desc')->get())
-                ->addColumn('action', function($data) {
-                    if (Auth::user()->id != $data->id) {
-                        $button =  '<button type="button" id="'.$data->id.'" class="btnRestore btn btn-success" title="Pulihkan"><i class="fas fa-trash-restore"></i></button>';
-
-                        return $button;
-                    }
-                })->rawColumns(['action'])->addIndexColumn()->make(true);
-        }
-
-        return view('data.officer.trash', $data);
-    }
-
-    public function restore($id)
-    {
-        try {
-            $officer    =   User::withTrashed()->findOrFail($id);
-            $officer->restore();
-
-            return response()->json(['messages' => 'Petugas Berhasil Dipulihkan']);
-        } catch (\Throwable $th) {
-            return response()->json(['messages' => 'Petugas Gagal Dipulihkan']);
         }
     }
 

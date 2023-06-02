@@ -24,7 +24,7 @@
                         <input type="hidden" name="member_id" id="member_id" value="{{ $member ? $member->id : ''}}">
 
                         <div class="row">
-                            <div class="col-lg-6 col-md-12">
+                            <div class="col-lg-4 col-md-12">
                                 <div class="form-group">
                                     <label>ID Member</label>
                                     <input type="text" name="member_code" id="member_code" class="form-control" placeholder="ID Member" value="{{ $member ? $member->member_code : '' }}">
@@ -32,11 +32,23 @@
                                 </div>
                             </div>
 
-                            <div class="col-lg-6 col-md-12">
+                            <div class="col-lg-4 col-md-12">
                                 <div class="form-group">
                                     <label>Nama Lengkap</label>
                                     <input type="text" name="fullname" id="fullname" class="form-control" placeholder="Nama Lengkap" value="{{ $member ? $member->fullname : '' }}">
                                     <span class="text-danger" id="fullname_error"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 col-md-12">
+                                <div class="form-group">
+                                    <label>Jenis Kelamin</label>
+                                    <select name="gender" id="gender" class="form-control">
+                                        <option value="">-- Pilih Jenis Kelamin --</option>
+                                        <option value="Laki-Laki" {{ $member ? ($member->gender == 'Laki-Laki' ? 'selected' : '') : '' }}>Laki-Laki</option>
+                                        <option value="Perempuan" {{ $member ? ($member->gender == 'Perempuan' ? 'selected' : '') : '' }}>Perempuan</option>
+                                    </select>
+                                    <span class="text-danger" id="gender_error"></span>
                                 </div>
                             </div>
                         </div>
@@ -62,21 +74,22 @@
                         <div class="row">
                             <div class="col-lg-6 col-md-12">
                                 <div class="form-group">
-                                    <label>Jenis Kelamin</label>
-                                    <select name="gender" id="gender" class="form-control">
-                                        <option value="">-- Pilih Jenis Kelamin --</option>
-                                        <option value="Laki-Laki" {{ $member ? ($member->gender == 'Laki-Laki' ? 'selected' : '') : '' }}>Laki-Laki</option>
-                                        <option value="Perempuan" {{ $member ? ($member->gender == 'Perempuan' ? 'selected' : '') : '' }}>Perempuan</option>
-                                    </select>
-                                    <span class="text-danger" id="gender_error"></span>
+                                    <label>Telepon</label>
+                                    <input type="text" name="phone" id="phone" class="form-control" placeholder="Telepon" value="{{ $member ? $member->phone : '' }}">
+                                    <span class="text-danger" id="phone_error"></span>
                                 </div>
                             </div>
 
                             <div class="col-lg-6 col-md-12">
                                 <div class="form-group">
-                                    <label>Telepon</label>
-                                    <input type="text" name="phone" id="phone" class="form-control" placeholder="Telepon" value="{{ $member ? $member->phone : '' }}">
-                                    <span class="text-danger" id="phone_error"></span>
+                                    <label>Foto</label>
+                                    <div class="input-group">
+                                        <div class="custom-file">
+                                            <input type="file" class="custom-file-input" name="image" id="thumbnailFile" accept="image/jpg,image/jpeg,image/png">
+                                            <label class="custom-file-label" for="thumbnailFile">{{ $member ? ($member->image ? $member->image : 'Pilih File...') : 'Pilih File...' }}</label>
+                                        </div>
+                                    </div>
+                                    <span class="text-danger" id="image_error"></span>
                                 </div>
                             </div>
                         </div>
@@ -92,14 +105,12 @@
 
                             <div class="col-lg-6 col-md-12">
                                 <div class="form-group">
-                                    <label>Foto</label>
-                                    <div class="input-group">
-                                        <div class="custom-file">
-                                            <input type="file" class="custom-file-input" name="image" id="thumbnailFile" accept="image/jpg,image/jpeg,image/png">
-                                            <label class="custom-file-label" for="thumbnailFile">{{ $member ? ($member->image ? $member->image : 'Pilih File...') : 'Pilih File...' }}</label>
-                                        </div>
-                                    </div>
-                                    <span class="text-danger" id="image_error"></span>
+                                    <label>Status</label>
+                                    <select name="status" id="status" class="form-control">
+                                        <option value="1" {{ $member ? ($member->status == '1' ? 'selected' : '') : '' }}>Aktif</option>
+                                        <option value="0" {{ $member ? ($member->status == '0' ? 'selected' : '') : '' }}>Nonaktif</option>
+                                    </select>
+                                    <span class="text-danger" id="status_error"></span>
                                 </div>
                             </div>
                         </div>
@@ -140,6 +151,7 @@
                     $('#phone_error').text();
                     $('#address_error').text();
                     $('#image_error').text();
+                    $('#status_error').text();
 
                     $.ajax({
                         url: "{{ route('member.store') }}",
@@ -188,6 +200,7 @@
                     $('#phone_error').text();
                     $('#address_error').text();
                     $('#image_error').text();
+                    $('#status_error').text();
 
                     $.ajax({
                         url: "{{ route('member.update') }}",

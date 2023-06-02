@@ -24,8 +24,9 @@ class PenaltyRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'  =>  'required|max:255|regex:/^[a-zA-Z0-9 ]*$/|unique:penalties,name,' . $this->penalty_id,
-            'value' =>  'required|digits_between:1,11'
+            'name'      =>  'required|max:255|regex:/^[a-zA-Z0-9 ]*$/|unique:penalties,name,' . $this->penalty_id,
+            'value'     =>  'required|digits_between:1,11',
+            'status'    =>  'required|in:0,1',
         ];
     }
 
@@ -37,7 +38,9 @@ class PenaltyRequest extends FormRequest
             'name.regex'            =>  'Jenis Denda hanya boleh huruf, angka dan spasi',
             'name.unique'           =>  'Jenis Denda sudah digunakan',
             'value.required'        =>  'Biaya Denda wajib diisi',
-            'value.digits_between'  =>  'Biaya Denda wajib angka, 1 - 11 angka'
+            'value.digits_between'  =>  'Biaya Denda wajib angka, 1 - 11 angka',
+            'status.required'       =>  'Status wajib dipilih',
+            'status.in'             =>  'Status tidak valid'
         ];
     }
 }

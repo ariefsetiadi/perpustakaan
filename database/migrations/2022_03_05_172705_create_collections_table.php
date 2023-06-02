@@ -16,14 +16,14 @@ class CreateCollectionsTable extends Migration
         Schema::create('collections', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('category_id')->unsigned();
-            $table->string('code', 10)->unique();
+            $table->string('code', 20)->unique();
             $table->string('name')->unique();
             $table->date('register_date');
             $table->integer('stock')->default(0);
             $table->text('description')->nullable();
-            $table->string('image')->nullable();
+            $table->string('image');
+            $table->boolean('status')->default(1);
             $table->timestamps();
-            $table->softDeletes();
 
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
         });

@@ -47,14 +47,12 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/detail/{id}', [OfficerController::class, 'show'])->name('officer.show');
                 Route::get('/edit/{id}', [OfficerController::class, 'edit'])->name('officer.edit');
                 Route::post('/update', [OfficerController::class, 'update'])->name('officer.update');
-                Route::get('/delete/{id}', [OfficerController::class, 'destroy'])->name('officer.delete');
-                Route::get('/trash', [OfficerController::class, 'trash'])->name('officer.trash');
-                Route::get('/restore/{id}', [OfficerController::class, 'restore'])->name('officer.restore');
                 Route::get('/reset/{id}', [OfficerController::class, 'reset'])->name('officer.reset');
             });
 
             Route::prefix('penalty')->group(function () {
                 Route::get('/', [PenaltyController::class, 'index'])->name('penalty.index');
+                Route::post('/store', [PenaltyController::class, 'store'])->name('penalty.store');
                 Route::get('/edit/{id}', [PenaltyController::class, 'edit'])->name('penalty.edit');
                 Route::post('/update', [PenaltyController::class, 'update'])->name('penalty.update');
             });
@@ -64,9 +62,6 @@ Route::middleware(['auth'])->group(function () {
                 Route::post('/store', [CategoryController::class, 'store'])->name('category.store');
                 Route::get('/edit/{id}', [CategoryController::class, 'edit'])->name('category.edit');
                 Route::post('/update', [CategoryController::class, 'update'])->name('category.update');
-                Route::get('/delete/{id}', [CategoryController::class, 'destroy'])->name('category.delete');
-                Route::get('/trash', [CategoryController::class, 'trash'])->name('category.trash');
-                Route::get('/restore/{id}', [CategoryController::class, 'restore'])->name('category.restore');
             });
 
             Route::prefix('collection')->group(function () {
@@ -78,9 +73,6 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/detail/{id}', [CollectionController::class, 'show'])->name('collection.show');
                 Route::get('/edit/{id}', [CollectionController::class, 'edit'])->name('collection.edit');
                 Route::post('/update', [CollectionController::class, 'update'])->name('collection.update');
-                Route::get('/delete/{id}', [CollectionController::class, 'destroy'])->name('collection.delete');
-                Route::get('/trash', [CollectionController::class, 'trash'])->name('collection.trash');
-                Route::get('/restore/{id}', [CollectionController::class, 'restore'])->name('collection.restore');
             });
         });
     });
@@ -93,9 +85,6 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/detail/{id}', [MemberController::class, 'show'])->name('member.show');
             Route::get('/edit/{id}', [MemberController::class, 'edit'])->name('member.edit');
             Route::post('/update', [MemberController::class, 'update'])->name('member.update');
-            Route::get('/delete/{id}', [MemberController::class, 'destroy'])->name('member.delete');
-            Route::get('/trash', [MemberController::class, 'trash'])->name('member.trash');
-            Route::get('/restore/{id}', [MemberController::class, 'restore'])->name('member.restore');
             Route::get('/print/{id}', [MemberController::class, 'print'])->name('member.print');
         });
     });

@@ -23,10 +23,17 @@ class MemberController extends Controller
                     $button =  '<a href="' . route('member.print', $data->id) . '" class="btn btn-success ml-2" title="Print" target="_blank"><i class="fas fa-print"></i></a>';
                     $button .=   '<a href="' . route('member.show', $data->id) . '" class="btn btn-info ml-2" title="Detail"><i class="fas fa-eye"></i></a>';
                     $button .=   '<a href="' . route('member.edit', $data->id) . '" class="btn btn-warning mx-2" title="Edit"><i class="fas fa-pencil-alt"></i></a>';
-                    $button .=  '<button type="button" id="'.$data->id.'" class="btnDelete btn btn-danger" title="Hapus"><i class="fas fa-eraser"></i></button>';
 
                     return $button;
-                })->rawColumns(['action'])->addIndexColumn()->make(true);
+                })->editColumn('status', function($data) {
+                    if ($data->status == TRUE) {
+                        $status =  '<h5><span class="badge badge-success">AKTIF</span></h5>';
+                    } else {
+                        $status =  '<h5><span class="badge badge-danger">NONAKTIF</span></h5>';
+                    }
+
+                    return $status;
+                })->rawColumns(['action', 'status'])->addIndexColumn()->make(true);
         }
 
         return view('data.member.index', $data);
@@ -47,26 +54,24 @@ class MemberController extends Controller
             $member_code    =   strtoupper($request->member_code);
             $path           =   'uploads/members';
             $image          =   $request->image;
-            $image_name     =   NULL;
     
-            if ($image != NULL) {
-                if (!File::exists($path)) {
-                    File::makeDirectory($path, $mode = 0775, true, true);
-
-                    $image_name =   'member_' . $member_code . '.' . $image->getClientOriginalExtension();
-                    $image->move(public_path($path), $image_name);
-                }
+            if (!File::exists($path)) {
+                File::makeDirectory($path, $mode = 0775, true, true);
             }
 
-            $member                   =   new Member;
-            $member->member_code      =   $member_code;
-            $member->fullname         =   ucwords(strtolower($request->fullname));
-            $member->place_of_birth   =   ucwords(strtolower($request->place_of_birth));
-            $member->date_of_birth    =   $request->date_of_birth;
-            $member->gender           =   $request->gender;
-            $member->address          =   $request->address;
-            $member->phone            =   $request->phone;
-            $member->image            =   $image_name;
+            $image_name =   'member_' . $member_code . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path($path), $image_name);
+
+            $member                 =   new Member;
+            $member->member_code    =   $member_code;
+            $member->fullname       =   ucwords(strtolower($request->fullname));
+            $member->place_of_birth =   ucwords(strtolower($request->place_of_birth));
+            $member->date_of_birth  =   $request->date_of_birth;
+            $member->gender         =   $request->gender;
+            $member->address        =   $request->address;
+            $member->phone          =   $request->phone;
+            $member->image          =   $image_name;
+            $member->status         =   $request->status;
             $member->save();
 
             return response()->json(['messages' => 'Member Berhasil Disimpan']);
@@ -112,12 +117,10 @@ class MemberController extends Controller
             $image          =   $request->image;
 
             if ($image != NULL) {
-                if ($image_name != NULL) {
-                    File::delete('uploads/members/' . $image_name);
+                File::delete('uploads/members/' . $image_name);
 
-                    $image_name =   'member_' . $member_code . '.' . $image->getClientOriginalExtension();
-                    $image->move(public_path($path), $image_name);
-                }
+                $image_name =   'member_' . $member_code . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path($path), $image_name);
             }
     
             $member =   array(
@@ -129,6 +132,7 @@ class MemberController extends Controller
                             'address'           =>  $request->address,
                             'phone'             =>  $request->phone,
                             'image'             =>  $image_name,
+                            'status'            =>  $request->status,
                         );
     
             Member::whereId($request->member_id)->update($member);

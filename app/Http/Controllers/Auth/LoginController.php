@@ -37,7 +37,7 @@ class LoginController extends Controller
             'password.required'     =>  'Password wajib diisi',
         ]);
 
-        if (Auth::attempt(['officer_id' => $officer_id, 'password' => $password, 'deleted_at' => null])) {
+        if (Auth::attempt(['officer_id' => $officer_id, 'password' => $password, 'status' => true])) {
             $user = Auth::getLastAttempted();
 
             toast('Anda Berhasil Login', 'success');

@@ -14,6 +14,10 @@
         </div>
 
         <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <button class="btn btn-primary" id="btnAdd" title="Tambah"><i class="fas fa-plus"></i></button>
+            </div>
+
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-bordered" width="100%" cellspacing="0" id="penaltyTable">
@@ -22,6 +26,7 @@
                                 <th>No.</th>
                                 <th>Jenis Denda</th>
                                 <th>Biaya Denda (%)</th>
+                                <th>Status</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -54,10 +59,20 @@
                                 <input type="text" name="name" id="name" class="form-control" placeholder="Jenis Denda">
                                 <span class="text-danger" id="name_error"></span>
                             </div>
+
                             <div class="form-group">
                                 <label>Biaya Denda (%)</label>
                                 <input type="number" name="value" id="value" class="form-control" placeholder="Biaya Denda (%)">
                                 <span class="text-danger" id="value_error"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Status</label>
+                                    <select name="status" id="status" class="form-control">
+                                        <option value="1">Aktif</option>
+                                        <option value="0">Nonaktif</option>
+                                    </select>
+                                <span class="text-danger" id="status_error"></span>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -107,6 +122,11 @@
                         name: 'value'
                     },
                     {
+                        data: 'status',
+                        name: 'status',
+                        searchable: false
+                    },
+                    {
                         data: 'action',
                         name: 'action',
                         orderable: false,
@@ -120,11 +140,28 @@
                         width: '10%'
                     },
                     {
+                        targets: 2,
+                        className: 'text-center',
+                        width: '20%'
+                    },
+                    {
                         targets: 3,
                         className: 'text-center',
-                        width: '15%'
+                        width: '10%'
+                    },
+                    {
+                        targets: 4,
+                        className: 'text-center',
+                        width: '20%'
                     }
                 ]
+            });
+
+            $('#btnAdd').click(function() {
+                $('.modal-title').text("Tambah Denda");
+                $('#btnSave').text("Simpan");
+                $('#categoryForm').trigger("reset");
+                $('#formModal').modal("show");
             });
 
             // Ajax Display Edit Modal
@@ -144,54 +181,104 @@
                         $('#penalty_id').val(html.data.id);
                         $('#name').val(html.data.name);
                         $('#value').val(html.data.value);
+                        $('#status').val(html.data.status);
                     }
                 });
             });
 
-            // Ajax Update Penalty
+            // Ajax Submit Penalty
             $('#penaltyForm').on('submit', function(event) {
                 event.preventDefault();
 
-                $("#name_error").text("");
-                $("#value_error").text("");
+                // Ajax Save Category
+                if($('#btnSave').text() == 'Simpan') {
+                    $('#name_error').text();
+                    $('#value_error').text();
+                    $('#status_error').text();
 
-                $.ajax({
-                    url: "{{ route('penalty.update') }}",
-                    method: 'POST',
-                    data: new FormData(this),
-                    contentType: false,
-                    cache: false,
-                    processData: false,
-                    dataType:"json",
+                    $.ajax({
+                        url: "{{ route('penalty.store') }}",
+                        method: 'POST',
+                        data: new FormData(this),
+                        contentType: false,
+                        cache: false,
+                        processData: false,
+                        dataType:"json",
 
-                    beforeSend: function() {
-                        $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Mengupdate...');
-                    },
+                        beforeSend: function() {
+                            $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Menyimpan...');
+                        },
 
-                    success: function(res) {
-                        $('#penaltyForm')[0].reset();
-                        $('#formModal').modal('hide');
-                        $('#penaltyTable').DataTable().ajax.reload();
+                        success: function(res) {
+                            $('#penaltyForm')[0].reset();
+                            $('#formModal').modal('hide');
+                            $('#penaltyTable').DataTable().ajax.reload();
 
-                        Swal.fire({
-                            title: 'Sukses',
-                            text: res.messages,
-                            icon: 'success',
-                            timer: 2000
-                        });
-                    },
-
-                    error: function(reject) {
-                        setTimeout(function() {
-                            $('#btnSave').text('Update');
-                            var response = $.parseJSON(reject.responseText);
-                            $.each(response.errors, function (key, val) {
-                                $('#' + key + "_error").text(val[0]);
-                                $('#' + key).addClass('is-invalid');
+                            Swal.fire({
+                                title: 'Sukses',
+                                text: res.messages,
+                                icon: 'success',
+                                timer: 2000
                             });
-                        });
-                    }
-                });
+                        },
+
+                        error: function(reject) {
+                            setTimeout(function() {
+                                $('#btnSave').text('Simpan');
+                                var response = $.parseJSON(reject.responseText);
+                                $.each(response.errors, function (key, val) {
+                                    $('#' + key + "_error").text(val[0]);
+                                    $('#' + key).addClass('is-invalid');
+                                });
+                            });
+                        }
+                    });
+                }
+
+                // Ajax Update Category
+                if($('#btnSave').text() == 'Update') {
+                    $('#name_error').text();
+                    $('#value_error').text();
+                    $('#status_error').text();
+
+                    $.ajax({
+                        url: "{{ route('penalty.update') }}",
+                        method: 'POST',
+                        data: new FormData(this),
+                        contentType: false,
+                        cache: false,
+                        processData: false,
+                        dataType:"json",
+
+                        beforeSend: function() {
+                            $('#btnSave').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Mengupdate...');
+                        },
+
+                        success: function(res) {
+                            $('#penaltyForm')[0].reset();
+                            $('#formModal').modal('hide');
+                            $('#penaltyTable').DataTable().ajax.reload();
+
+                            Swal.fire({
+                                title: 'Sukses',
+                                text: res.messages,
+                                icon: 'success',
+                                timer: 2000
+                            });
+                        },
+
+                        error: function(reject) {
+                            setTimeout(function() {
+                                $('#btnSave').text('Update');
+                                var response = $.parseJSON(reject.responseText);
+                                $.each(response.errors, function (key, val) {
+                                    $('#' + key + "_error").text(val[0]);
+                                    $('#' + key).addClass('is-invalid');
+                                });
+                            });
+                        }
+                    });
+                }
             });
         });
     </script>

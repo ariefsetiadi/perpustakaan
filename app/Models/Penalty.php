@@ -11,5 +11,6 @@ class Penalty extends Model
     protected $fillable = [
         'name',
         'value',
+        'status',
     ];
 }
